@@ -1,0 +1,14 @@
+\section{Conclusion}
+
+LLMs struggle with information that is too large to read or too specific to
+have appeared in their training data, and execution traces are both. We
+presented \sysname, which answers plain-language questions about kernel
+traces by having Java analyzers built on Trace Compass compute findings
+from the whole trace, with RAG supplying documentation and an LLM
+explaining the findings. On 13 questions over traces of 2, 10 and 30
+minutes, it answered every question correctly, while the same model given
+trace slices scored 35.5\% alone and 68.4\% with RAG, suggesting that
+computed evidence, not retrieved text alone, is what makes such answers
+reliable. Future work will remove the need for thread IDs in questions,
+evaluate more programs and kinds of bugs, test \sysname without the
+program documentation, and evaluate its statistical module.

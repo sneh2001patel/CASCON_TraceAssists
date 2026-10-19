@@ -1,0 +1,126 @@
+\section{Results}
+
+\begin{table*}[t]
+\centering
+\caption{The 13 questions, their category and hub scope, and each system's
+score. Baselines: one answer per slice (A, B, C) for each of the three
+traces, so 9 per question. \sysname: one answer per trace, so 3 per
+question. Correct = 1, partly correct = \textonehalf, wrong = 0.}
+\label{tab:questions}
+\small
+\begin{tabular}{@{}rp{3.05in}llrrr@{}}
+\toprule
+Q & Question & Category & Hub scope & LLM (/9) & RAG (/9) & \sysname (/3) \\
+\midrule
+1  & What does this trace record? & Comprehension & Multi & 3 & 2.5 & 3 \\
+2  & What does each thread of \texttt{batch\_server} do? & Comprehension & Multi & 3 & 7.5 & 3 \\
+3  & Which CPU(s) does \texttt{batch\_server} run on? & Comprehension & Single & 6 & 7.5 & 3 \\
+4  & Which thread is the bottleneck of \texttt{batch\_server}? & Root cause & Multi & 2 & 7.5 & 3 \\
+5  & Why is \texttt{worker-2} slow? & Dependency & Multi & 1 & 7.5 & 3 \\
+6  & Is \texttt{worker-2} slow because it uses more CPU than the other workers? & Dependency & Multi & 4 & 5.5 & 3 \\
+7  & What is \texttt{worker-2} waiting on, and which thread wakes it up? & Dependency & Single & 5.5 & 6.5 & 3 \\
+8  & Why does \texttt{flusher} hold the lock for so long? & Dependency & Single & 1 & 7.5 & 3 \\
+9  & Break down how \texttt{worker-2} spends its time in a typical round. & Quantitative & Single & 2 & 2 & 3 \\
+10 & What change would fix the slowdown, and how much faster would rounds be? & Remediation & Multi & 0 & 7.5 & 3 \\
+11 & In a typical round, how much later does \texttt{worker-2} finish than the other workers? & Quantitative & Multi & 2 & 5.5 & 3 \\
+12 & How could \texttt{flusher} hold \texttt{cache\_lock} for less time, and how long afterwards? & Remediation & Single & 6.5 & 7.5 & 3 \\
+13 & Does another thread hold up \texttt{flusher}, or does it delay itself? & Root cause & Single & 5.5 & 5.5 & 3 \\
+\midrule
+   & \textbf{Total} & & & 41.5/117 & 80/117 & 39/39 \\
+   & & & & (35.5\%) & (68.4\%) & (100\%) \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table}[t]
+\centering
+\caption{Scores as a percentage of the maximum, by slice, category and hub
+scope. \sysname reads the whole trace, so it has no slices.}
+\label{tab:breakdown}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & LLM & RAG & \sysname \\
+\midrule
+Slice A (head)      & 4  & 29 & -- \\
+Slice B (middle)    & 55 & 90 & -- \\
+Slice C (sampled)   & 47 & 86 & -- \\
+\midrule
+Comprehension (Q1--3)          & 44 & 65 & 100 \\
+Root cause (Q4, 13)            & 42 & 72 & 100 \\
+Dependency (Q5--8)             & 32 & 75 & 100 \\
+Quantitative (Q9, 11)          & 22 & 42 & 100 \\
+Remediation (Q10, 12)          & 36 & 83 & 100 \\
+\midrule
+Single-hub (6 questions)       & 49 & 68 & 100 \\
+Multi-hub (7 questions)        & 24 & 69 & 100 \\
+\midrule
+All                            & 35.5 & 68.4 & 100 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Questions and grading.} The 13 questions
+(Table~\ref{tab:questions}) fall into five categories: comprehension (what
+the trace and the threads do), root cause, dependency (what waits on what),
+quantitative analysis and remediation. Following TAAF~\cite{ezaz2026taaf},
+we also label each question by \emph{hub scope}: single-hub if one central
+entity and its direct relationships are enough to answer it, such as one
+thread's waits, and multi-hub if the answer combines or compares evidence
+across several entities, such as the wait chain through three threads.
+TAAF found multi-hub questions harder for LLMs; the set has 6 single-hub
+and 7 multi-hub questions. Each answer is graded against the expected
+answer and the measured values from the program's round log.
+
+\textbf{Overall.} \sysname answered all 13 questions correctly on all
+three traces, against 35.5\% for the LLM alone and 68.4\% with RAG. Trace
+length made little difference to any system: the baselines scored
+32--41\% and 64--71\% per trace, and \sysname 13 of 13 on each.
+
+\textbf{The baselines depend on where they look.} Slice A, what a user
+gets by pasting a trace into a chat, ends before the program starts, so
+the LLM alone scores 4\% on it; RAG's 29\% comes from repeating the
+program description. With slices B and C, which contain the program's
+activity, RAG reaches 86--90\% (Table~\ref{tab:breakdown}): the
+description tells the model what to look for, and the slice confirms it. But
+choosing such a slice requires already knowing where in the trace the
+program runs. \sysname reads the whole trace and needs no such choice.
+
+\textbf{Multi-hub questions.} The LLM alone falls from 49\% on single-hub
+questions to 24\% on multi-hub ones, consistent with TAAF. RAG closes the
+gap (68\% and 69\%) because the program description states how the
+threads relate. \sysname scores 100\% on both, because its process
+explainer measures the wait chain across threads rather than taking it
+from a document.
+
+\textbf{Quantitative answers.} Quantitative questions are the weakest
+category for both baselines (22\% and 42\%). A slice holds at most a few
+rounds, so a baseline measures one round: RAG's answers put
+\texttt{worker-2}'s lock wait at 24.86 or 27.06\,ms, against a mean of
+24.7\,ms over all rounds, and only two of nine time breakdowns (Q9) were
+complete. \sysname's figures are averages over every round and match the
+ground truth closely: the per-round gap between \texttt{worker-2} and the
+other workers (Q11) is 22.173, 22.127 and 22.156\,ms on the three traces,
+against 22.173, 22.128 and 22.156\,ms measured by the program, and its
+lock wait is within 0.010\,ms of the measured mean.
+
+\textbf{Retrieval.} With the question as the only query, RAG did not
+retrieve the program description for Q1 or Q13, so it scored no better
+than the LLM alone on them. \sysname's queries draw on its findings, and
+it retrieved the description for Q1.
+
+\textbf{Limitations.} The evaluation covers one program with one bug, and
+\sysname ran once per trace. Its thread questions carried thread IDs,
+which the baselines' did not, and its answers within a batch could see
+earlier ones. One \sysname answer (Q6, 30-minute trace) also reported two
+``abnormally late'' cycles that the ground truth does not show; the claim
+came from the auxiliary statistical module and did not change the answer.
+All answers were graded by one author.
+
+\textbf{Summary.} Given only trace text, an LLM answered about a third of
+the questions correctly, and adding the program's documentation raised
+this to two thirds, but only when its slice happened to contain the
+program's activity, and its numbers came from single rounds. Grounded in
+findings computed from the whole trace, \sysname answered all 13 questions
+correctly on all three traces, with its key measurements within 0.01\,ms
+of the ground truth.

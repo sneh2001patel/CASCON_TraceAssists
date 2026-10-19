@@ -1,0 +1,175 @@
+\documentclass[11pt]{article}
+
+% Literature review notes for the Related Work section of the TraceAssist
+% paper. Standalone; builds with plain pdflatex.
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{xspace}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+
+\newcommand{\sysname}{TraceAssist\xspace}
+
+\title{Literature Review: Work Related to \sysname}
+\author{}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\noindent Three papers are closest to \sysname. Each one combines an LLM with
+evidence prepared outside the LLM, as \sysname does, but they differ in what
+the evidence is and what the LLM is asked to do. Details below come from each
+paper's own text (TAAF from the local PDF, \texttt{RAG\_Qs/2601.02632v1.pdf};
+the other two from their arXiv abstracts).
+
+\section{TAAF: A Trace Abstraction and Analysis Framework Synergizing
+Knowledge Graphs and LLMs}
+
+\textbf{Citation.} A.~Ezaz, G.~Khodabandeh, M.~Babaei, N.~Ezzati-Jivan.
+ICSE 2026. arXiv:2601.02632, DOI 10.1145/3744916.3787832.
+\url{https://arxiv.org/abs/2601.02632}
+
+\textbf{Summary.} TAAF answers natural-language questions about Linux kernel
+traces. It builds a time-indexed Trace Compass \emph{state system} from the
+trace, and for each question extracts a query-specific \emph{knowledge graph}
+of threads, CPUs and resources; an LLM reasons over that graph to answer. The
+authors introduce \textbf{TraceQA-100}, 100 expert-written questions on LTTng
+traces of the SciMark 2.0 Java benchmark (about 34 million kernel events).
+Each question is posed on nine slices: 1, 10 and 100\,s windows at the start,
+middle and end of the trace. Questions are tagged single-hop or multi-hop.
+They compare three inputs: raw events (qualitative only, since they exceed
+the context window), the state system's numeric output (the baseline), and
+the knowledge graph (TAAF), with GPT-4.1 nano, GPT-4o and o4-mini, plus
+Gemini 2.5 and Claude models as a cross-vendor probe. TAAF improves accuracy
+by up to 31.2\%, mostly on multi-hop and causal questions.
+
+\textbf{Similar to \sysname.}
+\begin{itemize}
+  \item Same problem: natural-language questions about LTTng kernel traces,
+        motivated by traces being too large for an LLM's context.
+  \item Same foundation: Trace Compass's state system.
+  \item Same finding: multi-hop questions are harder, and structured
+        grounding helps most there. Our hub-scope labels follow TAAF.
+\end{itemize}
+
+\textbf{Different from \sysname.}
+\begin{itemize}
+  \item TAAF gives the LLM a graph and leaves the reasoning and arithmetic to
+        it; \sysname's analyzers compute the answer's measurements (wait
+        chains, per-round finish times, lock holds) and the LLM explains them.
+  \item TAAF answers over slices of at most 100\,s; \sysname analyses the
+        whole trace (up to 30 minutes, 87 million events).
+  \item TAAF has no documentation retrieval; \sysname adds RAG.
+  \item TAAF's questions describe scheduling behaviour of a benchmark;
+        ours diagnose an injected performance bug, including root cause and
+        remediation.
+\end{itemize}
+
+\textbf{Use in Related Work.} The closest prior work; position \sysname as
+moving from a graph the LLM must reason over to computed findings the LLM
+only explains, and from short slices to whole traces.
+
+\section{RCACopilot: Automatic Root Cause Analysis via Large Language Models
+for Cloud Incidents}
+
+\textbf{Citation.} Y.~Chen, H.~Xie, M.~Ma, Y.~Kang, X.~Gao, L.~Shi, Y.~Cao,
+X.~Gao, H.~Fan, M.~Wen, J.~Zeng, S.~Ghosh, X.~Zhang, C.~Zhang, Q.~Lin,
+S.~Rajmohan, D.~Zhang, T.~Xu. EuroSys 2024. arXiv:2305.15778.
+\url{https://arxiv.org/abs/2305.15778}
+
+\textbf{Summary.} RCACopilot is an on-call system for cloud incidents at
+Microsoft. Each incident is matched by its alert type to an \emph{incident
+handler}, which collects the relevant runtime diagnostic information; an LLM
+then predicts the root-cause category and writes an explanation. On one
+year of Microsoft incidents it reaches RCA accuracy of up to 0.766, and its
+diagnostic-collection component has been in production for over four years.
+
+\textbf{Similar to \sysname.}
+\begin{itemize}
+  \item The same division of labour: deterministic components gather the
+        evidence (handlers; for us, the planner and analyzers), and the LLM
+        turns it into an explanation.
+  \item Both target root cause analysis for engineers who would otherwise
+        inspect logs and traces by hand.
+\end{itemize}
+
+\textbf{Different from \sysname.}
+\begin{itemize}
+  \item Cloud incidents and alerts, not kernel traces; the evidence is
+        diagnostic data selected by alert type, not measurements computed
+        from a trace.
+  \item The LLM classifies incidents into root-cause categories; \sysname
+        answers open questions, including quantitative and remediation
+        questions.
+\end{itemize}
+
+\textbf{Use in Related Work.} Shows that the ``deterministic evidence, LLM
+explanation'' design works in production for incidents; \sysname applies it
+to kernel traces, where the evidence must itself be computed.
+
+\section{Opal: A Modular Framework for Optimizing Performance using
+Analytics and LLMs}
+
+\textbf{Citation.} M.~Zaeed, T.~Z.~Islam, V.~In\dj{}i\'c. arXiv:2510.00932,
+October 2025 (preprint).
+\url{https://arxiv.org/abs/2510.00932}
+
+\textbf{Summary.} Opal feeds performance analytics into LLM prompts so the
+model can suggest code optimizations for GPU kernels. Its insights come from
+hardware counters and Roofline analysis, linked to stall events. Across
+1{,}640 experiments on real GPU kernels, even a single insight source gave a
+speedup in over 98.5\% of cases, with average speedups of 19.34--52.3\%; the
+generated code was correct in all but one case, a failure caused by a vague
+diagnostic.
+
+\textbf{Similar to \sysname.}
+\begin{itemize}
+  \item Grounds the LLM in performance evidence computed by analysis tools
+        rather than raw data.
+  \item Targets the step that remains manual and expert-driven: turning
+        diagnostic output into an explanation or a fix (our remediation
+        questions).
+  \item Its one failure, a vague diagnostic leading to an unsafe
+        suggestion, supports our design of precise findings with confidence
+        levels and caveats.
+\end{itemize}
+
+\textbf{Different from \sysname.}
+\begin{itemize}
+  \item Hardware-counter profiles of GPU kernels, not kernel traces of
+        multithreaded programs; it does not reason about waits between
+        threads.
+  \item The output is optimized code, evaluated by speedup; \sysname's
+        output is answers to questions, evaluated by correctness.
+\end{itemize}
+
+\textbf{Use in Related Work.} Evidence from the performance-engineering side
+that analytics-grounded prompts make LLM suggestions reliable.
+
+\section{Also considered}
+
+\begin{itemize}
+  \item \emph{Stalled, Biased, and Confused: Uncovering Reasoning Failures in
+        LLMs for Cloud-Based Root Cause Analysis} (Riddell et al., FORGE
+        2026, arXiv:2601.22208). Studies six LLMs' reasoning failures in
+        cloud RCA, including sensitivity to input data modalities. A
+        search snippet said removing traces sometimes improved accuracy,
+        which would support our raw-trace baseline results, but the
+        abstract does not state it; check the full paper before citing.
+  \item \emph{Exploring LLM-based Agents for Root Cause Analysis}
+        (arXiv:2403.04123): a ReAct agent with tools for incident RCA. Not
+        read in detail.
+\end{itemize}
+
+\section{Suggested positioning}
+
+Prior work grounds LLMs in structure (TAAF's knowledge graphs), in
+diagnostic data selected per incident (RCACopilot), or in profiling
+analytics (Opal). \sysname differs by computing the answer's measurements
+from the whole kernel trace before the LLM sees anything, and by combining
+those findings with retrieved documentation.
+
+\end{document}

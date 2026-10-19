@@ -1,0 +1,965 @@
+"time","trace","trace_path","question","answer","status","error","requested_tid","rag_enabled","previous_response_id","response_model","response_id","finding_ids","document_titles","input_tokens","cached_tokens","output_tokens","reasoning_tokens","stage_durations_s","total_s","context_file"
+"2026-10-14T09:27:41-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What does this trace record?","## Trace overview
+
+- **“2min”** is a **Trace Compass experiment containing a Linux kernel trace**.
+- It covers **120.295 seconds**, from **19:06:30.864 973 636** to **19:08:31.160 268 538**.
+- **Linux Kernel Analysis is available**.
+- The trace contains activity for **2,481 threads**. Only 100 thread details were included in the supplied context, so the list is truncated.
+- Active executable names include:
+  - Applications such as `codium`, `steam`, `steamwebhelper`, `alacritty`, and `kate`
+  - Desktop components such as `Hyprland`, `Xwayland`, `waybar`, and `pipewire`
+  - System services such as `systemd`, `containerd`, `dockerd`, and `dbus-broker`
+  - Kernel threads such as `kworker/*`, `ksoftirqd/*`, and `migration/*`
+  - NVIDIA, network, storage, and tracing-related tasks
+
+The supplied data does **not** inventory the enabled kernel events, so it is not possible to say exactly which scheduler, syscall, interrupt, disk, or network events were recorded. There are also no computed findings summarizing CPU, I/O, or thread behavior. As a kernel trace, it cannot reveal data contents or break execution inside a program’s own user-space code down by function.","ok","","","true","","gpt-5.6-sol","resp_0a79a95bcd7dc763006acf8343f38c87d2a5d95932b3220701","","Cross-Host TCP Message Matching | TSP and TMLL outputs | Critical Path (Process Wait Analysis) | System calls as kernel boundary evidence | Limits of kernel-only evidence | Events Editor","6601","0","612","308","trace_overview=0.300s; rag_retrieval=3.566s; llm_call=10.154s","14.025","2026-10-14T09-27-41-04-00_5889e3fc.json"
+"2026-10-14T09:40:58-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What does this trace record?","# Trace overview
+
+**Window: 0.000–120,295.295 ms from trace start**
+
+`2min` is a **Linux kernel trace** from host `2min`, with **16 CPUs**. It spans **120.295 seconds** and contains **5,910,511 events across 363 event types**:
+
+- **System calls:** 3,146,182 events covering 132 calls
+- **Interrupts:** 1,260,857 events
+- **Scheduling:** 646,459 context-switch, wake-up, creation, and exit events
+- **Timers:** 484,144 events
+- **Other kernel events:** 367,298 events
+- **Initial state dump:** 5,571 events describing processes and open files at trace start
+
+It does **not** contain block/disk-I/O events, network packets, memory events, or user-space UST events. Consequently, it cannot expose application function-level execution or network-packet activity. File operations show paths and byte counts, not the data contents.
+
+# Recorded workload
+
+The main recorded workload was **`batch_server` (PID 159971)**:
+
+- Created at **14.482 ms**, executed the `batch_server` binary at **14.612 ms**, and ended successfully at **120,290.402 ms**.
+- Created five additional threads/TIDs: **159973–159977**.
+- Across its six threads, made **22,362 system calls**, including:
+  - 19,587 `futex` calls
+  - 2,611 `clock_nanosleep` calls
+- Wrote:
+  - **81,214 bytes in 20 writes** to `rounds.csv`
+  - **1,928 bytes in one write** to `ground_truth.json`
+  - **652 bytes in two writes** to a pipe
+- Ended with status **0**.
+
+The trace also captured recurring **`sensors` processes**, which read `/etc/sensors3.conf` and numerous `/sys/class/hwmon` and I²C pseudo-files. For example, **`sensors` PID 161651** made **1,775 system calls** and ended successfully.
+
+# CPU use
+
+Across the whole window:
+
+- CPUs were busy for **38,598.738 ms**, or **2.0% of the total capacity of 16 CPUs**.
+- Largest CPU users were:
+  - **`batch_server` (PID 159971):** 26,512.434 ms — **68.7% of busy time**
+  - **`steam` (PID 116825):** 1,074.595 ms — **2.8%**
+  - **`coolercontrold` (PID 780):** 1,002.494 ms — **2.6%**
+  - **`claude` (PID 57140):** 781.875 ms — **2.0%**
+  - **`steamwebhelper` (PID 117006):** 648.495 ms — **1.7%**
+
+# Other recorded processes
+
+- **2,239 processes** ran or made system calls.
+- Their likely roles were inferred as:
+  - 1,781 workload processes
+  - 6 launcher processes
+  - 447 background processes
+  - 5 tracer processes
+
+This classification is approximate: processes started during the trace are labeled “workload,” their parents “launcher,” LTTng tools “tracer,” and others “background.”
+
+Background processes—including `steam`, `coolercontrold`, `steamwebhelper`, `wireplumber`, `pipewire`, `codium`, and `Hyprland`—used **7,633.976 ms of CPU time (19.8% of busy time)** and made **945,873 system calls**.
+
+LTTng’s own tools—`lttng`, `lttng-sessiond`, and `lttng-consumerd`—used **52.872 ms of CPU time (0.1% of busy time)** and made **12,345 system calls**. This is tracing overhead, not workload activity.","ok","","","true","","gpt-5.6-sol","resp_06a9c00e8f67e0e9006acf865b633c87d2b2dccb3d859211e1","trace.recorded trace.cpu_usage trace.processes trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.timeline trace.background trace.tracer","Limits of kernel-only evidence | Cross-Host TCP Message Matching | TSP and TMLL outputs | Critical Path (Process Wait Analysis) | System calls as kernel boundary evidence | Events Editor","109759","0","1170","304","trace_overview=0.325s; trace_explainer=21.005s; rag_retrieval=0.966s; llm_call=16.089s","38.392","2026-10-14T09-40-58-04-00_5889e3fc.json"
+"2026-10-14T10:31:06-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What does each thread of batch_server (tid 159971) do?","# Scope limitation
+
+The supplied analysis covers only **TID 159971**, not the five worker threads it created (**159973–159977**). Therefore, their individual roles cannot be determined from these findings without separate per-thread analyses.
+
+## TID 159971 (`batch_server`)
+
+**Window: 0.000–120,295.295 ms from trace start**
+
+This thread:
+
+- Executed `/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/batch_server` at **14.612 ms**.
+- Loaded three runtime/shared-library files, reading **2,048 bytes**.
+- Created TIDs **159973, 159974, 159975, 159976, and 159977** around **165.457–165.556 ms**.
+- Repeatedly alternated between:
+  - Timer sleeps through `clock_nanosleep`
+  - Synchronization through `futex`
+- Produced the workload’s recorded output:
+  - Wrote **81,214 bytes in 20 writes** to `rounds.csv`.
+  - Wrote **1,928 bytes in one write** to `ground_truth.json`.
+  - Wrote **652 bytes in two writes** to a pipe.
+- Ended the whole process with status **0** at **120,290.402 ms**.
+
+It made **9,267 system calls**, dominated by:
+
+- `futex`: **7,837 calls**, totaling **54,617.006 ms**
+- `clock_nanosleep`: **1,306 calls**, totaling **65,492.729 ms**
+- `write`: **23 calls**
+- `mmap`: **18 calls**
+
+System-call durations include time blocked inside the calls.
+
+## Where TID 159971 spent its time
+
+Across the same window:
+
+- **Blocked:** 117,860.048 ms (**98.0%**)
+- **Waiting, cause unknown:** 2,210.403 ms (**1.8%**)
+- **Running in its own code:** 165.035 ms (**0.1%**)
+- **Running in system calls:** 34.561 ms
+- **Runnable but waiting for CPU:** 10.035 ms
+
+The five longest observed blocked intervals were all in `clock_nanosleep`; the longest was **100.013 ms**, starting at **165.572 ms**. Its critical path contains only TID 159971 in a timer wait. No other responsible thread was identified, although the critical-path analysis cannot always attribute cross-CPU wake-ups or network/softirq-delivered events.
+
+Because this is a kernel trace, it cannot break the **165.035 ms in the program’s own code down by function**. It also records file byte counts, not the contents written. Separate findings for TIDs **159973–159977** are needed to explain what each worker thread does.","ok","","159971","true","resp_06a9c00e8f67e0e9006acf865b633c87d2b2dccb3d859211e1","gpt-5.6-sol","resp_06a9c00e8f67e0e9006acf921df51887d29af09df937fc04ed","decomposition blocked.syscalls blocked.wake_chain running.work running.activity running.target running.target running.target running.target running.target running.target running.target running.timeline lifecycle.exit syscalls.frequency","sched_wakeup and blocked thread wakeups | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Blocking in futex | Linux thread scheduling states | CPU migration and task placement","121017","0","878","274","trace_overview=0.302s; unified_explainer=14.998s; tmll_analysis=0.585s; rag_retrieval=0.491s; llm_call=13.142s","29.530","2026-10-14T10-31-06-04-00_61ceb6f7.json"
+"2026-10-14T10:33:12-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What does thread 159971 of batch_server  do?","# TID 159971 activity
+
+**Window: 0.000–120,295.295 ms from trace start**
+
+TID **159971** performs `batch_server`’s startup, thread creation, synchronization/timed waiting, and recorded output:
+
+- Executed the `batch_server` program at **14.612 ms** and loaded three runtime/shared-library files.
+- Created five threads/processes at **165.457–165.556 ms**:
+  **159973, 159974, 159975, 159976, and 159977**.
+- Then repeatedly used:
+  - `clock_nanosleep`: **1,306 calls**, totaling **65,492.729 ms**
+  - `futex`: **7,837 calls**, totaling **54,617.006 ms**
+- Wrote:
+  - **81,214 bytes in 20 writes** to `rounds.csv`
+  - **1,928 bytes in one write** to `ground_truth.json`
+  - **652 bytes in two writes** to a pipe
+- Ended the whole process successfully at **120,290.402 ms**.
+
+It made **9,267 system calls** overall. System-call totals include time spent blocked inside those calls.
+
+## Where its time went
+
+- **Blocked:** 117,860.048 ms (**98.0%**)
+- **Unknown waiting:** 2,210.403 ms (**1.8%**)
+- **Running in application code:** 165.035 ms (**0.1%**)
+- **Running in system calls:** 34.561 ms
+- **Runnable but waiting for a CPU:** 10.035 ms
+
+Its five longest blocked intervals were all timer sleeps in `clock_nanosleep`; the longest was **100.013 ms** starting at **165.572 ms**.
+
+Thus, the trace shows that TID 159971 mostly sleeps or waits for synchronization, while handling startup, creating the other threads, and writing result files. The kernel trace cannot break its **165.035 ms of application code down by function**, nor does it record the contents of the bytes written.","ok","","159971","true","resp_06a9c00e8f67e0e9006acf921df51887d29af09df937fc04ed","gpt-5.6-sol","resp_06a9c00e8f67e0e9006acf92a0457487d286e867c770789290","decomposition blocked.syscalls blocked.wake_chain running.work running.activity running.target running.target running.target running.target running.target running.target running.target running.timeline lifecycle.exit syscalls.frequency","sched_wakeup and blocked thread wakeups | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Blocking in futex | Linux thread scheduling states | Runnable time and CPU contention","131962","121014","599","150","trace_overview=0.366s; unified_explainer=7.112s; tmll_analysis=0.009s; rag_retrieval=0.481s; llm_call=8.679s","16.647","2026-10-14T10-33-12-04-00_a1b4999a.json"
+"2026-10-14T10:34:05-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which CPU(s) does batch_server (tid 159971) run on?","## CPU placement unavailable
+
+The provided findings do **not identify the CPU IDs** on which `batch_server` TID **159971** ran, so I cannot list them without guessing.
+
+For the whole trace window (**0.000–120,295.295 ms**), the thread was on a CPU for **199.595 ms**—**165.035 ms** in user mode and **34.561 ms** in system calls—but the per-CPU scheduling/migration breakdown is missing. A CPU-by-CPU analysis of its `sched_switch` intervals is needed to answer this.","ok","","159971","true","resp_06a9c00e8f67e0e9006acf92a0457487d286e867c770789290","gpt-5.6-sol","resp_06a9c00e8f67e0e9006acf92d8cdc887d29d4a5e07552ef2b2","decomposition blocked.syscalls blocked.wake_chain syscalls.frequency","sched_wakeup and blocked thread wakeups | Blocking in recvfrom | Critical Path (Process Wait Analysis) | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states","136600","131959","192","66","trace_overview=0.290s; unified_explainer=0.804s; tmll_analysis=0.006s; rag_retrieval=0.593s; llm_call=4.503s","6.197","2026-10-14T10-34-05-04-00_982a2935.json"
+"2026-10-14T10:38:17-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which CPU(s) does batch_server (tid 159971) run on?","## CPU placement
+
+Across the full trace window (**0.000–120,295.295 ms**), `batch_server` (**TID 159971**) ran on:
+
+- **CPU 3:** 199.036 ms (**99.7%** of its running time)
+- **CPU 7:** 0.559 ms (**0.3%**)
+- **Migrations:** 1, from CPU 7 to CPU 3
+
+This is where the thread actually executed; its allowed CPU affinity mask was not recorded.","ok","","159971","true","","gpt-5.6-sol","resp_075719774150628e006acf93d6eb5487d297f53205958e8c21","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain syscalls.frequency","sched_wakeup and blocked thread wakeups | Blocking in recvfrom | Critical Path (Process Wait Analysis) | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states","5043","0","114","0","trace_overview=0.311s; unified_explainer=1.541s; tmll_analysis=0.025s; rag_retrieval=0.829s; llm_call=2.474s","5.185","2026-10-14T10-38-17-04-00_982a2935.json"
+"2026-10-14T10:39:50-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which thread is the bottleneck of batch_server","## Bottleneck
+
+**No specific bottleneck thread can be identified from the supplied findings.**
+
+Across the full trace (**0.000–120,295.295 ms**):
+
+- `batch_server` (**PID 159971**) had six threads: **TIDs 159971, 159973, 159974, 159975, 159976, and 159977**.
+- Collectively, they made **19,587 `futex` calls**, totaling **536,068.011 ms**, including blocked time. This shows substantial synchronization waiting, but the findings do not attribute those waits to a particular thread.
+- No per-thread critical path or wake-chain analysis was provided to determine which thread held up the others.
+
+The trace also lacks user-space events, so it cannot break the program’s own execution down by function. A per-thread critical-path/waker analysis of these six TIDs is needed to name the bottleneck.","ok","","","true","resp_075719774150628e006acf93d6eb5487d297f53205958e8c21","gpt-5.6-sol","resp_075719774150628e006acf942f1b4087d2a0734bd6eec6477e","trace.recorded trace.cpu_usage trace.processes trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.timeline trace.background trace.tracer","Limits of kernel-only evidence | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states | Critical Path (Process Wait Analysis) | Blocking in poll","113865","5040","371","174","trace_overview=0.298s; trace_explainer=20.505s; rag_retrieval=0.250s; llm_call=7.535s","28.612","2026-10-14T10-39-50-04-00_bb279d88.json"
+"2026-10-14T10:40:28-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which thread is the bottleneck of batch_server (tid 159971)?","## Bottleneck
+
+**No other thread was identified as the bottleneck for `batch_server` TID 159971.**
+
+Across the full trace (**0.000–120,295.295 ms**):
+
+- TID 159971 was **blocked for 117,860.048 ms (98.0%)**.
+- Its five longest recorded waits were all in `clock_nanosleep`; the longest was **100.013 ms**.
+- For that longest gap (**165.572–265.584 ms**), the critical path contained only **TID 159971 in a TIMER wait**. No direct waker or dependent thread was found.
+
+Thus, the evidence points to **TID 159971’s timer sleeps**, not a specific competing thread, as the dominant observed delay. However, this does not prove that no external cause exists: the critical-path analysis may fail to attribute cross-CPU remote wakeups or network/softirq-delivered events.","ok","","159971","true","resp_075719774150628e006acf942f1b4087d2a0734bd6eec6477e","gpt-5.6-sol","resp_075719774150628e006acf945673e087d2baccb3c5c6dccb5a","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain syscalls.frequency","sched_wakeup and blocked thread wakeups | Blocking in recvfrom | Critical Path (Process Wait Analysis) | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states","118535","113862","369","165","trace_overview=0.287s; unified_explainer=1.454s; tmll_analysis=0.007s; rag_retrieval=0.563s; llm_call=5.858s","8.170","2026-10-14T10-40-28-04-00_35a2e7d5.json"
+"2026-10-14T10:50:45-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which thread is the bottleneck of batch_server?","## Bottleneck
+
+**TID 159971 (`batch_server`) is the bottleneck**, with high confidence, over the whole trace window (**0–120295.295 ms**).
+
+- **83.5%** of the other threads’ wait time ended with a wake-up from TID 159971, totaling **427443.262 ms** across threads.
+- TID 159971 itself spent only **0.2% running** and **98.0% blocked**, mostly waiting on a **timer/sleep timeout**.
+- Worker waits ending with wake-ups from TID 159971 included:
+  - `worker-0` (TID 159973): **99552.978 ms**
+  - `worker-1` (TID 159974): **98138.877 ms**
+  - `worker-3` (TID 159976): **97845.498 ms**
+  - `worker-2` (TID 159975): **66388.320 ms**
+
+### Example dependency chain
+
+At **165.514 ms** from trace start, `worker-0` had a **100.137 ms** wait on TID 159971. The critical path was dominated by TID 159971 waiting on a timer for **100.013 ms**, after which it woke `worker-0`.
+
+A wake-up identifies the thread that ended a wait, not necessarily the complete cause behind it. Here, however, the aggregate wake relationships strongly identify the main `batch_server` thread as the process bottleneck.","ok","","","true","","gpt-5.6-sol","resp_03214eb52c31d234006acf96bf810c87d2b145326c5ad78f58","process.threads process.wait_graph process.bottleneck process.example_chain","Critical Path (Process Wait Analysis) | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states | Blocking in poll | Limits of kernel-only evidence","6489","0","323","0","target_resolver=0.075s; trace_overview=0.291s; process_explainer=7.384s; rag_retrieval=0.256s; llm_call=6.476s","14.489","2026-10-14T10-50-45-04-00_a9cc13b7.json"
+"2026-10-14T11:01:04-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which thread is the bottleneck of batch_server?","## Bottleneck
+
+No thread within **batch_server (PID 159971)** appears to bottleneck another thread over the whole trace window (**0–120297.520 ms**).
+
+- The process had only one live thread: **TID 159971 (`batch_server`)**.
+- It was blocked for **117860.048 ms (98.0%)**, running for **199.595 ms (0.2%)**, and waiting for CPU for **10.035 ms (0.0%)**.
+- **55.6% of its waiting ended with a timer** (sleep or timeout), indicating it was mostly idle by design rather than delayed by another thread.
+- Other wake-ups came mainly from **TID 159975 (`worker-2`)**, ending **52384.213 ms across 1305 waits**. However, wake-up totals include waits for new work and therefore do **not** establish `worker-2` as a bottleneck.
+
+This conclusion has **medium confidence**: a thread that sleeps while another waits for it can still be a bottleneck, but the trace provides no wait chain identifying such a thread here.","ok","","","true","","gpt-5.6-sol","resp_0f084afb6ecb47bb006acf992c182487d2923f93843e95cb99","process.threads process.wait_graph process.bottleneck","Critical Path (Process Wait Analysis) | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states | Blocking in poll | Limits of kernel-only evidence","4436","0","239","0","target_resolver=0.069s; trace_overview=0.303s; process_explainer=8.828s; rag_retrieval=0.250s; llm_call=5.753s","15.208","2026-10-14T11-01-04-04-00_a9cc13b7.json"
+"2026-10-14T11:01:42-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which thread is the bottleneck of batch_server (tid 159971)?","## Bottleneck for TID 159971
+
+**No other bottleneck thread was identified** for `batch_server` **TID 159971** over the whole trace (**0–120297.520 ms**).
+
+- The thread was **blocked for 117860.048 ms (98.0%)**.
+- Its longest blocked interval was **100.013 ms** in `clock_nanosleep`, starting at **165.572 ms**.
+- The critical path attributes that interval only to a **timer**; no other participating thread was found.
+- Overall, it spent **65492.729 ms across 1306 `clock_nanosleep` calls** and **54617.006 ms across 7837 `futex` calls**.
+- CPU scheduling was not a significant bottleneck: it waited for CPU for only **10.035 ms (0.008%)**.
+
+The trace therefore points primarily to timer/futex blocking, not to a specific thread. However, this is **not proof that no other thread was involved**: the critical-path analysis may fail to attribute cross-CPU remote wake-ups or network/softirq-delivered events to their actual waking task.","ok","","159971","true","resp_0f084afb6ecb47bb006acf992c182487d2923f93843e95cb99","gpt-5.6-sol","resp_0f084afb6ecb47bb006acf9950962487d2be771e7746b1e569","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain syscalls.frequency","sched_wakeup and blocked thread wakeups | Blocking in recvfrom | Critical Path (Process Wait Analysis) | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states","8977","4433","309","60","trace_overview=0.303s; unified_explainer=1.496s; tmll_analysis=0.006s; rag_retrieval=0.480s; llm_call=5.687s","7.974","2026-10-14T11-01-42-04-00_35a2e7d5.json"
+"2026-10-14T11:06:23-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which thread is the bottleneck of batch_server?","## Bottleneck
+
+**TID 159975 (`worker-2`) is the bottleneck**, with high confidence, over the whole trace window (**0–120295.295 ms**).
+
+- The main thread, TID 159971 (`batch_server`), waited **52,384.213 ms across 1,305 waits** on other threads.
+- `worker-2` ended essentially **100.0%** of those waits.
+- Aggregated wait chain:
+
+  `batch_server` (159971)  
+  ← `worker-2` (159975), mostly blocked in `futex`  
+  ← `flusher` (159977), mostly blocked in `clock_nanosleep`  
+  ← timer/timeout
+
+Per wait, `worker-2` averaged **4.640 ms running**, **10.863 ms waiting for CPU**, and **24.628 ms blocked** waiting for `flusher`.
+
+### Concrete example
+
+At **13951.032 ms**, the main thread began a **45.770 ms** wait on `worker-2`. The longest dependency was `flusher` waiting on a timer for **30.261 ms**, after which `worker-2` directly woke the main thread.
+
+### Thread overview
+
+Across **0–120295.295 ms**, the process had six threads:
+
+- Main `batch_server` (159971): **98.0% blocked**
+- `worker-0` (159973): **82.9% blocked**
+- `worker-1` (159974): **81.7% blocked**
+- `worker-2` (159975): **82.0% blocked**
+- `worker-3` (159976): **81.4% blocked**
+- `flusher` (159977): **98.1% blocked**
+
+These overall blocked percentages include waits for new work, which are idle time. The bottleneck result specifically follows waits that control main-thread progress. The chain is aggregated across all 1,305 waits; the example above is one specific occurrence.","ok","","","true","","gpt-5.6-sol","resp_047cdff372bbcff5006acf9a678ea487d2a797af686001b697","process.threads process.wait_graph process.bottleneck process.example_chain","Critical Path (Process Wait Analysis) | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states | Blocking in poll | Limits of kernel-only evidence","7363","0","599","171","target_resolver=0.079s; trace_overview=0.294s; process_explainer=7.368s; rag_retrieval=0.259s; llm_call=7.916s","15.922","2026-10-14T11-06-23-04-00_a9cc13b7.json"
+"2026-10-14T11:14:38-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which thread is the bottleneck of batch_server?","## Bottleneck
+
+**TID 159975 (`worker-2`) is the bottleneck of `batch_server`**, with high confidence, over the whole trace (**0–120295.295 ms**).
+
+- The main thread, TID 159971, waited on other threads for **52384.258 ms**.
+- `worker-2` ended **52384.213 ms across 1,305 waits**—effectively **100.0%** of that thread-dependent waiting.
+- This represents **44.4% of all main-thread wait time**; another **65475.790 ms** was timer/timeout waiting.
+
+## Wait chain
+
+Aggregated across those waits:
+
+1. `batch_server` (TID 159971) waited for `worker-2` (TID 159975).
+2. Per wait, `worker-2` averaged:
+   - **4.640 ms running**
+   - **10.863 ms waiting for CPU**
+   - **24.628 ms blocked in `futex`**, until awakened by `flusher` (TID 159977)
+3. `flusher` averaged **24.609 ms blocked in `clock_nanosleep`**, until awakened by a timer.
+
+Thus, the dependency chain was:
+
+`batch_server` → `worker-2` → `flusher` → timer
+
+## Concrete example
+
+At **13951.032 ms**, the main thread’s longest wait on `worker-2` lasted **45.770 ms**. The longest dependency was `flusher` waiting on a timer for **30.261 ms**, after which `worker-2` directly woke the main thread.
+
+Only **1 of 1,305** waits was flagged as an outlier; the median was **40.049 ms** and the maximum was **45.770 ms**.
+
+Across the whole trace, `worker-2` had **1,305 futex waits totaling 32150.062 ms**. The aggregated chain describes the usual pattern rather than one individual wait, and waits by other worker threads for new work are idle time—not evidence that they are bottlenecks.","ok","","","true","","gpt-5.6-sol","resp_084f5f92f67e3ee2006acf9c56980887d28f343908bb93d0d1","process.threads process.wait_graph process.bottleneck process.example_chain process.bottleneck_syscalls process.round_consistency","Critical Path (Process Wait Analysis) | Blocking in futex | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states | Blocking in poll","8202","0","594","145","target_resolver=0.082s; trace_overview=0.295s; process_explainer=7.375s; tmll_analysis=0.039s; tmll_series=0.008s; rag_retrieval=2.473s; llm_call=8.589s","18.870","2026-10-14T11-14-38-04-00_a9cc13b7.json"
+"2026-10-14T11:15:38-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Why is worker-2 (tid 159975) slow?","## Why `worker-2` is slow
+
+Across the whole trace (**0–120295.295 ms**), `worker-2` (TID 159975) was slow primarily because it spent most of its time **blocked**, with CPU scheduling delay as a secondary factor:
+
+- **Blocked:** **98528.511 ms (81.9%)**
+- **Ready but waiting for CPU:** **15030.859 ms (12.5%)**
+- **Running in user mode:** **6522.293 ms (5.4%)**
+
+### Main cause: futex blocking
+
+Its longest blocked intervals were all inside `futex`; the longest was **102.894 ms**, starting at **165.578 ms**.
+
+For that longest wait, the dependency chain was:
+
+1. `worker-2` waited on `batch_server` (TID 159971), its direct waker.
+2. `batch_server` was itself held up by a **100.006 ms timer wait**.
+3. After the timer expired, `batch_server` ran and woke `worker-2`.
+
+Across the trace, `worker-2` made **5,221 futex calls**. Their reported total duration includes time blocked inside those calls.
+
+### Secondary cause: CPU contention
+
+`worker-2` ran exclusively on **CPU 3** and spent **15030.859 ms** ready but unable to run. CPU 3 was occupied during that time mainly by:
+
+- `worker-0` (TID 159973): **36.7%**
+- `worker-3` (TID 159976): **33.0%**
+- `worker-1` (TID 159974): **30.2%**
+
+This contention attribution has **medium confidence**. The trace shows where `worker-2` ran, but not its CPU-affinity mask, so it cannot establish why it stayed on CPU 3.
+
+**Conclusion:** `worker-2` is primarily synchronization-bound in `futex`, not compute-bound. CPU contention on CPU 3 adds further delay. The trace identifies the timer-dependent wake chain for its longest wait, but does not prove that every futex wait had that same cause.","ok","","159975","true","resp_084f5f92f67e3ee2006acf9c56980887d28f343908bb93d0d1","gpt-5.6-sol","resp_084f5f92f67e3ee2006acf9c90c84087d29900154fee2d65ad","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | CPU migration and task placement | CPU Usage analysis","13731","8199","653","191","trace_overview=0.300s; unified_explainer=2.688s; tmll_analysis=0.007s; rag_retrieval=0.490s; llm_call=9.612s","13.101","2026-10-14T11-15-38-04-00_c6a7016b.json"
+"2026-10-14T11:16:57-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Is worker-2 (tid 159975) slow because it uses more CPU than the other workers?","## Short answer
+
+**No—the trace does not support high CPU use as the reason `worker-2` is slow.** However, these findings do not include total CPU usage for every other worker, so they cannot prove whether `worker-2` used slightly more or less CPU than each one.
+
+Across the whole trace (**0–120295.295 ms**):
+
+- `worker-2` ran for only **6541.380 ms**, about **5.4%** of the trace.
+- It was **blocked for 98528.511 ms (81.9%)**, with its five longest waits all inside `futex`.
+- It was ready but waiting for CPU for **15030.859 ms (12.5%)**.
+
+Thus, its dominant issue was **blocking**, not excessive CPU consumption. CPU contention was secondary: while it waited to run on CPU 3, that CPU was occupied mainly by `worker-0` (**36.7%** of its runnable wait), `worker-3` (**33.0%**), and `worker-1` (**30.2%**).
+
+Also, **0 of 2,611 cycles were abnormally late**; the normal period was **48.040 ms**. The trace records that `worker-2` ran only on CPU 3, but its allowed CPU-affinity mask was not recorded.","ok","","159975","true","resp_084f5f92f67e3ee2006acf9c90c84087d29900154fee2d65ad","gpt-5.6-sol","resp_084f5f92f67e3ee2006acf9ce20e8487d2bec7fca59b082479","window.late_cycle_scan decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | CPU Usage analysis | CPU migration and task placement","19510","13728","480","191","trace_overview=0.283s; window_finder=12.514s; unified_explainer=2.627s; tmll_analysis=0.010s; rag_retrieval=0.584s; llm_call=7.852s","23.874","2026-10-14T11-16-57-04-00_38c2b232.json"
+"2026-10-14T11:18:34-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What is worker-2 (tid 159975) waiting on, and which thread wakes it up?","## Wait and wake-up
+
+Across the whole trace (**0–120295.295 ms**), `worker-2` (TID 159975) was primarily **blocked inside `futex`**:
+
+- Blocked for **98528.511 ms**, or **82.0% of its alive time**.
+- All five longest blocked intervals were in `futex`.
+- The longest lasted **102.894 ms**, starting at **165.578 ms**.
+
+For that longest wait, the chain was:
+
+1. `worker-2` waited on **`batch_server` (TID 159971)**.
+2. `batch_server` was itself held up by a **100.006 ms timer wait**.
+3. After the timer expired, `batch_server` ran and **directly woke `worker-2`**.
+
+So, for the longest observed wait:
+
+**`worker-2` → waits in `futex` on `batch_server` → `batch_server` waits on a timer → `batch_server` wakes `worker-2`.**
+
+The findings identify this chain for the longest gap; they do not establish that `batch_server` woke every one of `worker-2`’s futex waits. Separately, `worker-2` spent **15030.859 ms (12.5%)** runnable but waiting for CPU 3.","ok","","159975","true","resp_084f5f92f67e3ee2006acf9ce20e8487d2bec7fca59b082479","gpt-5.6-sol","resp_084f5f92f67e3ee2006acf9d4403c087d2a41b6718c5852478","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | sched_wakeup and blocked thread wakeups | Linux thread scheduling states","24991","19507","506","217","trace_overview=0.283s; unified_explainer=2.632s; tmll_analysis=0.009s; rag_retrieval=0.618s; llm_call=6.632s","10.175","2026-10-14T11-18-34-04-00_40330555.json"
+"2026-10-14T11:20:10-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Why does flusher (tid 159977) hold the lock for so long?","## The trace does not show that `flusher` held a lock
+
+The available evidence instead shows that `flusher` (TID 159977) spent almost all its time **waiting**, not executing while holding a lock. Across **0–120295.295 ms**:
+
+- **Blocked:** **117850.752 ms (98.0%)**
+- **Waiting for CPU:** **2238.550 ms (1.9%)**
+- **Actually running:** only **29.897 ms**
+
+Its five longest blocked intervals were inside `futex`. For the longest one—**100.042 ms**, starting at **165.594 ms**—the chain was:
+
+1. `flusher` waited on `batch_server` (TID 159971).
+2. `batch_server` was itself held up by a **99.991 ms timer wait**.
+3. `batch_server` then ran for **0.047 ms** and directly woke `flusher`.
+
+Over the whole trace, `flusher` made:
+
+- **2,611 `futex` calls**, totaling **67763.754 ms**
+- **1,305 `clock_nanosleep` calls**, totaling **52349.721 ms**
+
+Those totals include blocked time.
+
+**Conclusion:** the long observed intervals are predominantly `flusher` sleeping or blocked in synchronization calls. The findings do not contain lock-ownership events or an interval proving that `flusher` retained a lock while sleeping, so the trace cannot establish why—or even whether—it held a lock for that duration.","ok","","159977","true","resp_084f5f92f67e3ee2006acf9d4403c087d2a41b6718c5852478","gpt-5.6-sol","resp_084f5f92f67e3ee2006acf9da2860087d29235abd3ff6ba04a","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Blocking in poll | Blocking in epoll_wait | System Call Latency Analysis","29929","24988","515","190","trace_overview=0.275s; unified_explainer=0.886s; tmll_analysis=0.692s; rag_retrieval=0.458s; llm_call=8.370s","10.683","2026-10-14T11-20-10-04-00_3414b371.json"
+"2026-10-14T11:21:54-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Break down how worker-2 (tid 159975) spends its time in a typical round (running, waiting for CPU, blocked).","## Approximate round breakdown
+
+The findings do not segment individual rounds or provide a round count, so a true median or average round cannot be calculated. Using the whole-trace proportions (**0–120295.295 ms**) as an approximation, every **100 ms** of representative elapsed time contains roughly:
+
+- **Blocked:** **81.9 ms**
+- **Waiting for CPU:** **12.5 ms**
+- **Running:** **5.4 ms**
+
+Whole-trace totals were:
+
+| State | Time | Share |
+|---|---:|---:|
+| Blocked | **98528.511 ms** | **81.9%** |
+| Runnable, waiting for CPU | **15030.859 ms** | **12.5%** |
+| Running on CPU | **6541.380 ms** | **5.4%** |
+
+### What accounts for the waits?
+
+- The five longest blocked intervals were all inside `futex`; the longest was **102.894 ms**.
+- While runnable, `worker-2` queued on **CPU 3**. That CPU was occupied during its wait mainly by:
+  - `worker-0`: **36.7%**
+  - `worker-3`: **33.0%**
+  - `worker-1`: **30.2%**
+
+The CPU-occupancy attribution has medium confidence. The trace shows that `worker-2` ran only on CPU 3, but it does not record its allowed CPU-affinity mask. Individual rounds may also vary from these whole-trace proportions.","ok","","159975","true","resp_084f5f92f67e3ee2006acf9da2860087d29235abd3ff6ba04a","gpt-5.6-sol","resp_084f5f92f67e3ee2006acf9e08f73087d2922619568b01411b","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | CPU Usage analysis | Linux thread scheduling states","35427","29926","630","302","trace_overview=0.273s; unified_explainer=2.657s; tmll_analysis=0.008s; rag_retrieval=0.582s; llm_call=9.870s","13.392","2026-10-14T11-21-54-04-00_c73c4554.json"
+"2026-10-14T11:23:43-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What change would fix the slowdown, and how much faster would rounds be?","","error","javax.net.ssl.SSLException: (bad_record_mac) Received fatal alert: bad_record_mac","","true","resp_084f5f92f67e3ee2006acf9e08f73087d2922619568b01411b","","","trace.recorded trace.cpu_usage trace.processes trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.timeline trace.background trace.tracer","Limits of kernel-only evidence | Database access optimization | File I/O waits | Latency views | Blocking in accept | Critical Path (Process Wait Analysis)","","","","","target_resolver=0.070s; trace_overview=0.276s; trace_explainer=20.382s; rag_retrieval=0.664s; llm_call=0.230s","21.651","2026-10-14T11-23-43-04-00_c5396759.json"
+"2026-10-14T11:27:01-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What change would fix the slowdown, and how much faster would rounds be?","## Cannot determine a specific fix or speedup from this trace
+
+This is a **kernel-only trace** covering **0–120295.295 ms**. It records scheduling, wake-ups, timers, and system calls, but **not user-space events, program functions, memory activity, network packets, or block I/O**. Therefore, it cannot identify the application code that defines a round or calculate how an untested code change would affect round duration.
+
+What it does show for `batch_server` (PID 159971):
+
+- **19,587 `futex` calls**, with **536068.011 ms** of aggregate syscall time.
+- **2,611 sleep/timer calls**, with **117842.450 ms** of aggregate syscall time.
+- Only **26512.434 ms** of CPU execution across its six threads.
+- Overall machine CPU use was just **2.0% of 16-CPU capacity**, so system-wide CPU capacity was not exhausted.
+
+The futex and timer totals include blocked time across multiple threads and can overlap; they cannot be subtracted directly from round latency to predict a speedup.
+
+The process wrote **81,214 bytes** to `rounds.csv`, but a kernel trace records byte counts—not file contents—so the recorded round measurements are unavailable here.
+
+**Conclusion:** synchronization and timer behavior are the areas indicated for further investigation, but the trace does not establish which code change would fix them or how many milliseconds faster rounds would become. A quantitative answer requires round-level user-space instrumentation or the contents of `rounds.csv`, followed by a trace after the proposed change.","ok","","","true","resp_084f5f92f67e3ee2006acf9e08f73087d2922619568b01411b","gpt-5.6-sol","resp_084f5f92f67e3ee2006acf9f38f51087d28e24567e9f406fa9","trace.recorded trace.cpu_usage trace.processes trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.timeline trace.background trace.tracer","Limits of kernel-only evidence | Database access optimization | File I/O waits | Latency views | Blocking in accept | Critical Path (Process Wait Analysis)","148568","35424","721","387","target_resolver=0.067s; trace_overview=0.284s; trace_explainer=20.044s; rag_retrieval=0.490s; llm_call=12.962s","33.880","2026-10-14T11-27-01-04-00_c5396759.json"
+"2026-10-14T11:38:19-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What does this trace record?","## Trace contents
+
+Across the whole trace (**0–120,295.295 ms**), **2min** records Linux kernel activity on a **16-CPU** host:
+
+- **Duration:** 120.295 seconds
+- **Events:** 5,910,511 events of 363 types
+- **System calls:** 3,146,182 events covering 132 calls
+- **Interrupts:** 1,260,857 events
+- **Scheduling:** 646,459 context-switch, wake-up, creation, and exit events
+- **Timers:** 484,144 events
+- **Other kernel events:** 367,298
+- **Initial state dump:** 5,571 events describing processes and open files at trace start
+
+It did **not** record block/disk-I/O events, network packets, memory events, or user-space UST events. Consequently, it cannot break time spent in application code down by function or inspect file/network payload contents; kernel evidence only gives operations and byte counts.
+
+## Main recorded workload
+
+The principal workload was **batch_server (PID 159971)**:
+
+- Created at **14.482 ms**, executed the `batch_server` program at **14.612 ms**, and created five additional threads/TIDs at approximately **165.457–165.556 ms**.
+- Across its six threads, it made **22,362 system calls**.
+- Its dominant syscall categories were:
+  - **19,587 `futex` calls**, totaling 536,068.011 ms across threads
+  - **2,611 `clock_nanosleep` calls**, totaling 117,842.450 ms across threads
+- It wrote:
+  - **81,214 bytes in 20 writes** to `rounds.csv`
+  - **1,928 bytes in one write** to `ground_truth.json`
+  - **652 bytes in two writes** to a pipe
+- It exited successfully near the end of the trace, at **120,290.402 ms**.
+
+The trace also contains recurring **sensors** processes—for example, **sensors (PID 160003)** at 1,348.827 ms, **PID 161196** at 72,079.954 ms, **PID 161538** at 92,301.987 ms, and **PID 161651** at 97,361.472 ms—which read hardware-monitoring and I²C pseudo-files.
+
+## CPU activity
+
+Across **0–120,295.295 ms**:
+
+- Total busy CPU time was **38,598.738 ms**, only **2.0% of the available 16-CPU capacity**.
+- Leading CPU users were:
+  - **batch_server (PID 159971):** 26,512.434 ms, **68.7% of busy time**
+  - **steam (PID 116825):** 1,074.595 ms, 2.8%
+  - **coolercontrold (PID 780):** 1,002.494 ms, 2.6%
+  - **claude (PID 57140):** 951.617 ms, 2.5%
+  - **steamwebhelper (PID 117006):** 648.495 ms, 1.7%
+
+## Other recorded processes
+
+- An estimated **1,975 processes** were active by running or making system calls.
+- Background activity comprised **183 processes**, using **7,385.631 ms** of CPU time (**19.1% of busy time**) and making **945,873 system calls**.
+- Five LTTng tracer-tool processes used **52.872 ms** of CPU time (**0.1% of busy time**) and made **12,345 system calls**; this is tracing overhead rather than workload activity.
+
+The workload/background/launcher/tracer classification is **inferred**, so the process-role counts have medium confidence; the event and CPU totals have high confidence.","ok","","","true","","gpt-5.6-sol","resp_0362424f13771b17006acfa1deffac87d2a344f798ff3ab948","trace.recorded trace.cpu_usage trace.processes trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.timeline trace.background trace.tracer","Limits of kernel-only evidence | Cross-Host TCP Message Matching | TSP and TMLL outputs | Critical Path (Process Wait Analysis) | System calls as kernel boundary evidence | Events Editor","109983","0","1064","239","target_resolver=0.080s; trace_overview=0.285s; trace_explainer=20.364s; rag_retrieval=0.833s; llm_call=13.058s","34.648","2026-10-14T11-38-19-04-00_5889e3fc.json"
+"2026-10-14T11:38:52-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What does each thread of batch_server (tid 159971) do?","## Overall activity
+
+Across the whole trace (**0–120,295.295 ms**), **batch_server (PID/TID 159971)** ran with six threads and made **22,362 system calls**. Process-wide activity included:
+
+- **19,587 `futex` calls** for synchronization
+- **2,611 sleep/timer calls**
+- Writing **81,214 bytes** to `rounds.csv`
+- Writing **1,928 bytes** to `ground_truth.json`
+- Writing **652 bytes** to a pipe
+- Exiting successfully
+
+The file operations are available only at process level, so the findings do not identify which individual thread performed each write. Because this is a kernel-only trace without UST events, time in the program’s own code cannot be resolved by function.
+
+## Threads
+
+All percentages below cover each thread’s lifetime within **0–120,295.295 ms**.
+
+- **TID 159971 — `batch_server` (main thread)**
+  - Ran **199.595 ms (0.2%)**
+  - Waited for CPU **10.035 ms (0.0%)**
+  - Was blocked **117,860.048 ms (98.0%)**
+  - Its waits included **65,475.790 ms over 1,306 timer wake-ups** and **52,384.213 ms over 1,305 waits ended by worker-2 (TID 159975)**.
+  - It also woke worker-0, worker-1, worker-2, worker-3, and the flusher after many of their waits. Some of those waits may simply be idle waits for new work.
+
+- **TID 159973 — `worker-0`**
+  - Ran **6,594.762 ms (5.5%)**
+  - Was runnable but waiting for CPU **13,958.121 ms (11.6%)**
+  - Was blocked **99,552.978 ms (82.9%)**
+  - Its 1,306 recorded blocked intervals were ended by wake-ups from the main thread.
+
+- **TID 159974 — `worker-1`**
+  - Ran **6,534.172 ms (5.4%)**
+  - Waited for CPU **15,434.504 ms (12.8%)**
+  - Was blocked **98,138.877 ms (81.7%)**
+  - Its 1,306 blocked intervals were ended by the main thread.
+
+- **TID 159975 — `worker-2`**
+  - Ran **6,541.380 ms (5.4%)**
+  - Waited for CPU **15,030.859 ms (12.5%)**
+  - Was blocked **98,528.511 ms (82.0%)**
+  - This worker directly determined the end of the main thread’s **1,305 inter-thread waits**, totaling **52,384.213 ms**.
+  - During those waits, worker-2 averaged **4.640 ms running**, **10.863 ms waiting for CPU**, and **24.628 ms blocked in `futex`** until woken by the flusher.
+  - Across the full trace, it had **1,305 futex waits totaling 32,150.062 ms**, involving two distinct lock addresses.
+
+- **TID 159976 — `worker-3`**
+  - Ran **6,548.631 ms (5.5%)**
+  - Waited for CPU **15,713.481 ms (13.1%)**
+  - Was blocked **97,845.498 ms (81.4%)**
+  - Its 1,306 blocked intervals were ended by the main thread.
+
+- **TID 159977 — `flusher`**
+  - Ran only **29.897 ms (0.0%)**
+  - Waited for CPU **2,238.550 ms (1.9%)**
+  - Was blocked **117,850.752 ms (98.1%)**
+  - In the main-thread dependency chain, it spent an average of **24.609 ms per round in `clock_nanosleep`**, woke on a timer, and then enabled worker-2 to continue.
+  - Worker-2’s dependent `futex` waits totaled **32,140.191 ms over 1,305 wake-ups from the flusher**.
+
+Thus, the names and synchronization show four active workers, a mostly waiting coordinating main thread, and a mostly sleeping flusher. The trace does not reveal the application functions executed by worker-0, worker-1, or worker-3 while they were running.","ok","","159971","true","resp_0362424f13771b17006acfa1deffac87d2a344f798ff3ab948","gpt-5.6-sol","resp_0362424f13771b17006acfa1fb4af887d28447c3a31ad67ecd","process.threads process.wait_graph process.bottleneck process.what_if process.example_chain process.activity process.bottleneck_syscalls process.round_consistency","Critical Path (Process Wait Analysis) | Blocking in futex | Linux thread scheduling states | CPU migration and task placement | Runnable time and CPU contention | File I/O waits","120098","109980","1345","376","trace_overview=0.294s; process_explainer=14.263s; tmll_analysis=0.008s; tmll_series=0.007s; rag_retrieval=0.635s; llm_call=17.256s","32.471","2026-10-14T11-38-52-04-00_61ceb6f7.json"
+"2026-10-14T11:38:58-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which CPU(s) does batch_server (tid 159971) run on?","## CPU placement
+
+Across the whole trace (**0–120,295.295 ms**), **batch_server TID 159971** ran on:
+
+- **CPU 3:** 199.036 ms (**99.7%** of its running time)
+- **CPU 7:** 0.559 ms (**0.3%**)
+
+It started on **CPU 7**, migrated **once**, and finished on **CPU 3**. Total running time was **199.595 ms**.
+
+This shows where the thread actually executed; its permitted CPU-affinity mask was not recorded.","ok","","159971","true","resp_0362424f13771b17006acfa1fb4af887d28447c3a31ad67ecd","gpt-5.6-sol","resp_0362424f13771b17006acfa20e8c4887d2b5f9fe8af63b73e4","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain syscalls.frequency","sched_wakeup and blocked thread wakeups | Blocking in recvfrom | Critical Path (Process Wait Analysis) | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states","125743","120095","181","54","trace_overview=0.278s; unified_explainer=1.412s; tmll_analysis=0.007s; rag_retrieval=0.569s; llm_call=4.245s","6.512","2026-10-14T11-38-58-04-00_982a2935.json"
+"2026-10-14T11:39:14-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which thread is the bottleneck of batch_server (tid 159971)?","## Bottleneck
+
+Across the whole trace (**0–120,295.295 ms**), the bottleneck identified from the main thread’s progress is **worker-2 (TID 159975)**.
+
+- The main thread, **batch_server (TID 159971)**, spent **52,384.213 ms across 1,305 inter-thread waits** waiting until worker-2 woke it.
+- Worker-2 ended essentially **100% of the main thread’s waits on other threads**.
+
+## Wait chain
+
+The aggregated dependency chain was:
+
+**batch_server (TID 159971)**  
+← waits for **worker-2 (TID 159975)**  
+← blocked in `futex` until woken by **flusher (TID 159977)**  
+← blocked in `clock_nanosleep` until a **timer** fires.
+
+Per main-thread wait, worker-2 averaged:
+
+- **4.640 ms running**
+- **10.863 ms waiting for CPU**
+- **24.628 ms blocked in `futex`** waiting for the flusher
+
+The flusher averaged **24.609 ms in `clock_nanosleep`** within that chain. Thus, worker-2 is the direct bottleneck, while the longest underlying dependency is usually the flusher’s timer sleep.
+
+For one concrete wait at **13,951.032 ms**, the main thread waited **45.770 ms**: worker-2 was preempted/running, then depended on the flusher sleeping for **30.261 ms**, after which worker-2 resumed and woke the main thread.
+
+Worker-2 recorded **1,305 futex waits totaling 32,150.062 ms**; the longest was **30.296 ms**. This conclusion is high confidence, but waits by other workers for new work are idle time and were not treated as bottlenecks.","ok","","159971","true","resp_0362424f13771b17006acfa20e8c4887d2b5f9fe8af63b73e4","gpt-5.6-sol","resp_0362424f13771b17006acfa21b1d1487d29daf18b055dee6da","process.threads process.wait_graph process.bottleneck process.what_if process.example_chain process.bottleneck_syscalls process.round_consistency","Critical Path (Process Wait Analysis) | Blocking in futex | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states | File I/O waits","133636","125740","530","137","trace_overview=0.274s; process_explainer=7.366s; tmll_analysis=0.009s; tmll_series=0.005s; rag_retrieval=0.629s; llm_call=8.126s","16.410","2026-10-14T11-39-14-04-00_35a2e7d5.json"
+"2026-10-14T11:39:29-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Why is worker-2 (tid 159975) slow?","## Why worker-2 is slow
+
+Across the whole trace (**0–120,295.295 ms**), **worker-2 (TID 159975)** spent most of its time waiting rather than executing:
+
+- **Blocked:** 98,528.511 ms (**81.9%**)
+- **Runnable but waiting for CPU:** 15,030.859 ms (**12.5%**)
+- **Running:** 6,541.380 ms (**5.4%**)
+
+### Primary reason: synchronization waits
+
+Its five longest blocked intervals were all inside **`futex`**, with the longest lasting **102.894 ms**. A futex wait normally represents waiting for a synchronization condition such as a lock or condition variable [1].
+
+For that longest wait, beginning at **165.578 ms**, the dependency chain was:
+
+**worker-2 (TID 159975)** waited on **batch_server (TID 159971)**, which spent **100.006 ms in a timer sleep**, was then briefly preempted/running, and directly woke worker-2.
+
+This critical path explains the longest observed wait, not necessarily every futex wait.
+
+### Secondary reason: CPU scheduling delay
+
+Worker-2 was ready but unable to run for **15,030.859 ms**, always queued on **CPU 3**. During that time, CPU 3 was occupied mainly by:
+
+- **worker-0 (TID 159973):** 36.7%
+- **worker-3 (TID 159976):** 33.0%
+- **worker-1 (TID 159974):** 30.2%
+
+This likely indicates CPU contention among the workers, although that finding has medium confidence. Worker-2 actually executed only on CPU 3, but its CPU-affinity mask was not recorded, so the trace cannot establish whether it was restricted to that CPU.
+
+## All sources used:
+
+1) Blocking in futex - https://man7.org/linux/man-pages/man2/futex.2.html","ok","","159975","true","resp_0362424f13771b17006acfa21b1d1487d29daf18b055dee6da","gpt-5.6-sol","resp_0362424f13771b17006acfa2268c2c87d2ad0d083450b6344d","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | CPU migration and task placement | CPU Usage analysis","139101","133633","801","376","trace_overview=0.278s; unified_explainer=2.570s; tmll_analysis=0.006s; rag_retrieval=0.557s; llm_call=11.557s","14.969","2026-10-14T11-39-29-04-00_c6a7016b.json"
+"2026-10-14T11:39:42-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Is worker-2 (tid 159975) slow because it uses more CPU than the other workers?","## No—its delay is dominated by waiting, not CPU use
+
+Across the whole trace (**0–120,295.295 ms**), none of worker-2’s **2,611 cycles** was abnormally late; the normal period was **48.040 ms**.
+
+Worker-2’s time was:
+
+- **81.9% blocked:** 98,528.511 ms
+- **12.5% runnable but waiting for CPU:** 15,030.859 ms
+- **5.4% running:** 6,541.380 ms
+
+Its five longest blocked intervals were all in **`futex`**, with the longest lasting **102.894 ms**. In that longest interval, worker-2 waited for the main thread **TID 159971**, whose critical-path activity included a **100.006 ms timer sleep** before it woke worker-2.
+
+Worker-2 also waited to run on CPU 3 while the other workers occupied it:
+
+- worker-0 (TID 159973): **36.7%** of worker-2’s runnable wait
+- worker-3 (TID 159976): **33.0%**
+- worker-1 (TID 159974): **30.2%**
+
+Thus, the evidence points to **synchronization blocking first and CPU-queue delay second**, not excessive CPU consumption by worker-2. The supplied findings do not include total CPU times for every other worker, so they cannot establish a precise per-worker CPU ranking. Also, worker-2 ran only on CPU 3, but its permitted affinity mask was not recorded.","ok","","159975","true","resp_0362424f13771b17006acfa2268c2c87d2ad0d083450b6344d","gpt-5.6-sol","resp_0362424f13771b17006acfa23587a487d281dcf13aab0c13e7","window.late_cycle_scan decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | CPU Usage analysis | CPU migration and task placement","145028","139098","500","161","trace_overview=0.268s; window_finder=0.006s; unified_explainer=2.525s; tmll_analysis=0.004s; rag_retrieval=0.571s; llm_call=8.929s","12.305","2026-10-14T11-39-42-04-00_38c2b232.json"
+"2026-10-14T11:39:56-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What is worker-2 (tid 159975) waiting on, and which thread wakes it up?","## What worker-2 waits on
+
+Across the whole trace (**0–120,295.295 ms**), **worker-2 (TID 159975)** was blocked for **98,528.511 ms (81.9% of its time)**. Its five longest blocked intervals were all inside **`futex`**, indicating synchronization waits such as a lock or condition variable [1].
+
+## Which thread wakes it
+
+For worker-2’s longest wait:
+
+- It entered the `futex` wait at **165.578 ms** and remained blocked for **102.894 ms**.
+- Its direct waker was the main **batch_server thread (TID 159971)**.
+- The chain was: **worker-2 waited on TID 159971**, which was itself held up by a **100.006 ms timer sleep**, followed by **2.829 ms preempted** and **0.058 ms running** before it woke worker-2.
+
+This wake chain describes the longest observed wait; the supplied finding does not establish that TID 159971 woke every futex wait.
+
+Separately, worker-2 spent **15,030.859 ms (12.5%)** runnable but queued for CPU 3, mainly while worker-0, worker-3, and worker-1 occupied that CPU. That is scheduling delay rather than a blocked wait requiring a thread wake-up.
+
+## All sources used:
+
+1) Blocking in futex - https://man7.org/linux/man-pages/man2/futex.2.html","ok","","159975","true","resp_0362424f13771b17006acfa23587a487d281dcf13aab0c13e7","gpt-5.6-sol","resp_0362424f13771b17006acfa241cf7c87d295b6083ff8b4ebc3","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | sched_wakeup and blocked thread wakeups | Linux thread scheduling states","150529","145025","563","242","trace_overview=0.275s; unified_explainer=2.538s; tmll_analysis=0.006s; rag_retrieval=0.480s; llm_call=11.208s","14.508","2026-10-14T11-39-56-04-00_40330555.json"
+"2026-10-14T11:40:07-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Why does flusher (tid 159977) hold the lock for so long?","## The trace does not prove that the flusher holds the lock
+
+Across the whole trace (**0–120,295.295 ms**), **flusher (TID 159977)** ran for only **29.897 ms** and was blocked for **117,850.752 ms (98.0%)**. Its syscall activity was dominated by:
+
+- **2,611 `futex` calls:** 67,763.754 ms total
+- **1,305 `clock_nanosleep` calls:** 52,349.721 ms total
+
+A blocked `futex` normally means the thread itself is waiting for a synchronization condition; it does not prove that the thread owns a lock [1].
+
+For its longest blocked interval, beginning at **165.594 ms** and lasting **100.042 ms**, the chain was:
+
+**flusher (TID 159977)** waited on **batch_server (TID 159971)**, which was itself held up by a **99.991 ms timer sleep** before running for **0.047 ms** and directly waking the flusher.
+
+Therefore, this thread-level evidence shows that the flusher spends nearly all its time sleeping or waiting. It does **not** establish that it retained a particular lock during those waits. Determining why or whether it holds a lock while sleeping would require lock-ownership or user-space instrumentation that is not present in these findings.
+
+## All sources used:
+
+1) Blocking in futex - https://man7.org/linux/man-pages/man2/futex.2.html","ok","","159977","true","resp_0362424f13771b17006acfa241cf7c87d295b6083ff8b4ebc3","gpt-5.6-sol","resp_0362424f13771b17006acfa24e7f7887d2b62cdc97b041f6d0","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Blocking in poll | Blocking in epoll_wait | System Call Latency Analysis","155524","150526","539","216","trace_overview=0.267s; unified_explainer=0.850s; tmll_analysis=0.006s; rag_retrieval=0.465s; llm_call=8.774s","10.362","2026-10-14T11-40-07-04-00_3414b371.json"
+"2026-10-14T11:40:17-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Break down how worker-2 (tid 159975) spends its time in a typical round (running, waiting for CPU, blocked).","## Available breakdown
+
+The findings do not define individual round boundaries, so they cannot give an exact **typical-round** breakdown. Over the whole trace (**0–120,295.295 ms**), worker-2 spent:
+
+| State | Time | Share |
+|---|---:|---:|
+| **Blocked** | 98,528.511 ms | **81.9%** |
+| **Waiting for CPU** | 15,030.859 ms | **12.5%** |
+| **Running** | 6,541.380 ms | **5.4%** |
+
+- Its five longest blocked intervals were all in **`futex`**; the longest was **102.894 ms**.
+- While runnable, it queued exclusively on **CPU 3**. That CPU was occupied during its wait mainly by worker-0 (36.7%), worker-3 (33.0%), and worker-1 (30.2%).
+- All **6,541.380 ms** of its execution occurred on CPU 3.
+
+Thus, the whole-trace proportions suggest a round is dominated by blocking, followed by CPU-queue delay, with relatively little execution. However, an exact per-round average requires round boundaries and state totals computed separately for each round; those are missing from these findings.","ok","","159975","true","resp_0362424f13771b17006acfa24e7f7887d2b62cdc97b041f6d0","gpt-5.6-sol","resp_0362424f13771b17006acfa25aadf887d2bffd57bb726daf74","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | CPU Usage analysis | Linux thread scheduling states","161046","155521","460","183","trace_overview=0.267s; unified_explainer=2.518s; tmll_analysis=0.006s; rag_retrieval=0.497s; llm_call=6.919s","10.209","2026-10-14T11-40-17-04-00_c73c4554.json"
+"2026-10-14T11:40:34-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What change would fix the slowdown, and how much faster would rounds be?","## Recommended change and estimated gain
+
+The likely fix is to ensure **flusher (TID 159977) does not sleep or perform slow work while holding the synchronization state that worker-2 waits for**—for example, release it before `clock_nanosleep` and reacquire it afterward if required.
+
+Across the whole trace (**0–120,295.295 ms**), the estimate is:
+
+- Current average main-thread wait per round: **40.141 ms**
+- Estimated wait after removing this dependency: **18.442 ms**
+- Estimated improvement: **about 2.2× faster**
+
+This estimate has **medium confidence**. It assumes everything else in each round remains as recorded; only retracing after the change can measure the actual improvement. Other workers already determine the lower bound: they finished after an average of **17.969 ms**, limiting the gain in **1,017 of 1,305 rounds**.
+
+## Why this change targets the bottleneck
+
+The aggregated wait chain was:
+
+**batch_server main thread (TID 159971)**  
+← waits for **worker-2 (TID 159975)**  
+← blocked an average **24.628 ms in `futex`** waiting for **flusher (TID 159977)**  
+← flusher spent an average **24.609 ms in `clock_nanosleep`** until a timer fired.
+
+Worker-2 ended essentially **100% of the main thread’s inter-thread waits**, totaling **52,384.213 ms over 1,305 rounds**. Its relevant futex contention comprised **1,305 waits totaling 32,150.062 ms**.
+
+As a concrete example at **13,951.032 ms**, the main thread waited **45.770 ms**; the critical path included the flusher sleeping for **30.261 ms** before worker-2 resumed and completed the round.
+
+The rounds were generally consistent—median **40.049 ms**, maximum **45.770 ms**—with only **one** wait flagged as an outlier.","ok","","","true","resp_0362424f13771b17006acfa25aadf887d2bffd57bb726daf74","gpt-5.6-sol","resp_0362424f13771b17006acfa269a31887d28c92d99f33de5908","process.threads process.wait_graph process.bottleneck process.what_if process.example_chain process.bottleneck_syscalls process.round_consistency","Critical Path (Process Wait Analysis) | Blocking in futex | Database access optimization | File I/O waits | Latency views | Blocking in accept","173010","161043","655","227","target_resolver=0.066s; trace_overview=0.268s; process_explainer=7.270s; tmll_analysis=0.006s; tmll_series=0.004s; rag_retrieval=0.540s; llm_call=8.931s","17.087","2026-10-14T11-40-34-04-00_c5396759.json"
+"2026-10-14T11:47:59-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What does this trace record?","## Trace contents
+
+Across the whole trace (**0–120,295.295 ms**), **`2min`** is a Linux kernel trace from a **16-CPU** host. It contains **5,910,511 events** of **363 types**, including:
+
+- **3,146,182 system-call events**, covering 132 calls
+- **1,260,857 interrupt events**
+- **646,459 scheduling events**: context switches, wake-ups, process creation, and exits
+- **484,144 timer events**
+- **367,298 other kernel events**
+- **5,571 initial state-dump events** describing processes and open files
+
+It did **not** record block/disk-I/O events, network packets, memory events, or user-space UST events.
+
+## Recorded workload
+
+The principal workload was **batch_server (PID 159971)**:
+
+- Created at **14.482 ms**, executed `batch_server` at **14.612 ms**, and created five additional threads, for six threads total.
+- Made **22,362 system calls**, dominated by **19,587 futex calls** and **2,611 clock_nanosleep calls**.
+- Wrote **81,214 bytes in 20 writes** to `rounds.csv`, **1,928 bytes in one write** to `ground_truth.json`, and **652 bytes in two pipe writes**.
+- Exited successfully at **120,290.402 ms**.
+
+Recurring **sensors** processes, such as **PID 160003**, **PID 161196**, **PID 161538**, and **PID 161651**, read sensor configuration and `/sys` hardware-monitoring files.
+
+A kernel trace records byte counts for reads and writes, **not the data contents**. Because no user-space events were captured, time in the programs’ own code cannot be broken down by function.
+
+## CPU use
+
+Across **0–120,295.295 ms**:
+
+- Total CPU busy time was **38,598.738 ms**, or **2.0% of the available 16-CPU capacity**.
+- Top CPU consumers were:
+  - **batch_server (PID 159971): 26,512.434 ms**, 68.7% of busy time
+  - **steam (PID 116825): 1,074.595 ms**, 2.8%
+  - **coolercontrold (PID 780): 1,002.494 ms**, 2.6%
+  - **claude (PID 57140): 951.617 ms**, 2.5%
+  - **steamwebhelper (PID 117006): 648.495 ms**, 1.7%
+
+## Other recorded activity
+
+- An estimated **1,975 processes** were active: 1,781 classified as workload, 6 as launchers, 183 as background, and 5 as tracer processes. These roles are inferred, so this classification has **medium confidence**.
+- Background processes used **7,385.631 ms of CPU** (19.1% of busy time) and made **945,873 system calls**.
+- LTTng’s own tracing tools used **52.872 ms of CPU** and made **12,345 system calls**; this was tracing overhead, not workload activity.","ok","","","true","","gpt-5.6-sol","resp_0534a4792f65ae29006acfa41f91bc87d281edabb01b882e3d","trace.recorded trace.cpu_usage trace.processes trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.workload_process trace.timeline trace.background trace.tracer","Limits of kernel-only evidence | Cross-Host TCP Message Matching | TSP and TMLL outputs | Critical Path (Process Wait Analysis) | System calls as kernel boundary evidence | Events Editor","109983","109980","942","249","target_resolver=0.082s; trace_overview=0.285s; trace_explainer=19.998s; rag_retrieval=1.040s; llm_call=16.091s","37.514","2026-10-14T11-47-59-04-00_5889e3fc.json"
+"2026-10-14T11:54:22-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What does each thread of batch_server do?","## Process-level activity
+
+Across the whole trace (**0–120,295.295 ms**), `batch_server` **PID 159971** had six threads and made **22,362 system calls**, dominated by:
+
+- **19,587 futex calls** for synchronization
+- **2,611 sleep/timer calls**
+
+Process-wide file activity included writing:
+
+- **81,214 bytes in 20 writes** to `rounds.csv`
+- **1,928 bytes in one write** to `ground_truth.json`
+- **652 bytes in two pipe writes**
+
+Those operations are reported for the process as a whole, so these findings do not assign every operation to a specific thread. The kernel trace also cannot break user-mode execution down by application function, and it records byte counts rather than file contents.
+
+## Threads
+
+| Thread | Observed behavior |
+|---|---|
+| **TID 159971 — batch_server/main** | Mostly coordinates waits and wake-ups. It ran **0.2%** and was blocked **98.0%**. A timer woke it across **1,306 waits totaling 65,475.790 ms**. It subsequently woke worker-0, worker-1, worker-2, worker-3, and flusher. It also waited **52,384.213 ms over 1,305 waits** for worker-2 to complete the process-critical work. |
+| **TID 159973 — worker-0** | One of four similar worker threads. It ran **5.5%**, waited for CPU **11.6%**, and was blocked **82.9%**. Its **1,306 waits totaling 99,552.978 ms** ended with wake-ups from the main thread. The trace does not identify the functions executed during its user-mode work. |
+| **TID 159974 — worker-1** | Ran **5.4%**, waited for CPU **12.8%**, and was blocked **81.7%**. Its **1,306 waits totaling 98,138.877 ms** ended with wake-ups from the main thread. Its application-level function is not recorded. |
+| **TID 159975 — worker-2** | Ran **5.4%**, waited for CPU **12.5%**, and was blocked **82.0%**. It is the process bottleneck: it ended effectively **100% of the main thread’s waits on other threads**, totaling **52,384.213 ms over 1,305 waits**. During those waits, worker-2 averaged **4.640 ms running**, **10.863 ms waiting for CPU**, and **24.628 ms blocked in `futex`** until woken by flusher. |
+| **TID 159976 — worker-3** | Ran **5.5%**, waited for CPU **13.1%**, and was blocked **81.4%**. Its **1,306 waits totaling 97,845.498 ms** ended with wake-ups from the main thread. Its application-level function is not recorded. |
+| **TID 159977 — flusher** | Ran only **0.025%**, waited for CPU **1.9%**, and was blocked **98.1%**. In the process-critical chain, it spent an average **24.609 ms per wait in `clock_nanosleep`**, woke on a timer, and then woke worker-2. |
+
+## Observed coordination chain
+
+The recurring process-critical chain was:
+
+**main thread (159971) waits for worker-2 (159975) → worker-2 waits in futex for flusher (159977) → flusher waits on a timer.**
+
+The worker names suggest intended roles, but the trace only establishes scheduling, system calls, waits, and wake-ups—not the specific application functions each worker executes. Also, waits for new work can be normal idle time; a wake-up identifies who ended a wait, not necessarily the entire causal chain behind it.","ok","","","true","resp_0534a4792f65ae29006acfa4aa4e8087d2b318ed71add0368b","gpt-5.6-sol","resp_0534a4792f65ae29006acfa59cd6f087d2bde9b68b09c1c88c","process.threads process.wait_graph process.bottleneck process.what_if process.example_chain process.activity process.bottleneck_syscalls process.round_consistency","Critical Path (Process Wait Analysis) | Blocking in futex | Linux thread scheduling states | ASGI and asynchronous serving | Django request and response lifecycle | CPU migration and task placement","183684","173991","1228","389","target_resolver=0.077s; trace_overview=0.304s; process_explainer=14.740s; tmll_analysis=0.007s; tmll_series=0.008s; rag_retrieval=0.476s; llm_call=17.985s","33.602","2026-10-14T11-54-22-04-00_713d3083.json"
+"2026-10-14T11:48:25-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which CPU(s) does batch_server (tid 159971) run on?","## CPU placement
+
+Across the whole trace (**0–120,295.295 ms**), `batch_server` **TID 159971** ran on two CPUs:
+
+- **CPU 3:** **199.036 ms** — **99.7%** of its running time
+- **CPU 7:** **0.559 ms** — **0.3%**
+
+It started on CPU 7, migrated **once**, and finished on CPU 3. Total on-CPU time was **199.595 ms**.
+
+These are the CPUs where it actually ran. Its allowed CPU-affinity mask was not recorded.","ok","","159971","true","resp_0534a4792f65ae29006acfa4387b2487d284e297012a1f8454","gpt-5.6-sol","resp_0534a4792f65ae29006acfa4461c9c87d2959f7df06cb35d5b","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain syscalls.frequency","sched_wakeup and blocked thread wakeups | Blocking in recvfrom | Critical Path (Process Wait Analysis) | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states","126383","121300","132","0","trace_overview=0.293s; unified_explainer=1.502s; tmll_analysis=0.007s; rag_retrieval=0.495s; llm_call=3.380s","5.678","2026-10-14T11-48-25-04-00_982a2935.json"
+"2026-10-14T11:48:44-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Which thread is the bottleneck of batch_server?","## Bottleneck
+
+Across the whole trace (**0–120,295.295 ms**), the bottleneck is **worker-2 (TID 159975)**, with high confidence.
+
+The main thread, **batch_server (TID 159971)**, waited on other threads for **52,384.258 ms**. Worker-2 ended **52,384.213 ms over 1,305 waits—effectively 100%** of that thread-dependent waiting.
+
+## Wait chain
+
+The aggregated dependency chain was:
+
+1. **batch_server (TID 159971)** waited for **worker-2 (TID 159975)**.
+2. Per wait, worker-2 averaged:
+   - **4.640 ms running**
+   - **10.863 ms waiting for CPU**
+   - **24.628 ms blocked in `futex`**, awaiting **flusher (TID 159977)**
+3. **flusher (TID 159977)** was itself blocked for an average **24.609 ms in `clock_nanosleep`**, until its timer expired.
+
+So the chain was:
+
+**main thread 159971 ← worker-2 159975 ← flusher 159977 ← timer**
+
+These values are aggregated over all 1,305 waits, not one particular occurrence.
+
+## Concrete example
+
+At **13,951.032 ms**, the main thread’s longest wait on worker-2 lasted **45.770 ms**:
+
+- Worker-2 was preempted and ran briefly.
+- The dependency then passed to the flusher, which spent **30.261 ms** in a timer sleep.
+- Worker-2 resumed and directly woke the main thread.
+
+## Consistency and syscall evidence
+
+- The waits were generally consistent: median **40.049 ms**, maximum **45.770 ms**.
+- Only **1 of 1,305 waits** was flagged as an outlier.
+- TMLL recorded **1,305 futex waits** for worker-2, totaling **32,150.062 ms**, with a longest wait of **30.296 ms** across two lock addresses.
+
+The whole-trace futex totals also include worker-2 waiting for new work, so the main-thread wait chain is the relevant evidence for identifying it as the bottleneck.","ok","","","true","resp_0534a4792f65ae29006acfa4461c9c87d2959f7df06cb35d5b","gpt-5.6-sol","resp_0534a4792f65ae29006acfa4520d1c87d29735a40024529bd2","process.threads process.wait_graph process.bottleneck process.what_if process.example_chain process.bottleneck_syscalls process.round_consistency","Critical Path (Process Wait Analysis) | Blocking in futex | CPU migration and task placement | Runnable time and CPU contention | Linux thread scheduling states | Blocking in poll","134222","126380","694","215","target_resolver=0.077s; trace_overview=0.293s; process_explainer=7.677s; tmll_analysis=0.007s; tmll_series=0.005s; rag_retrieval=0.502s; llm_call=10.419s","18.981","2026-10-14T11-48-44-04-00_a9cc13b7.json"
+"2026-10-14T11:49-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Why is worker-2 (tid 159975) slow?","## Why worker-2 is slow
+
+Across the whole trace (**0–120,295.295 ms**), **worker-2 (TID 159975)** was slow primarily because it spent most of its lifetime blocked:
+
+- **Blocked:** **98,528.511 ms (81.9%)**
+- **Runnable but waiting for CPU:** **15,030.859 ms (12.5%)**
+- **Running in user mode:** **6,522.293 ms (5.4%)**
+
+### Main cause: futex waits
+
+Its five longest blocked intervals were all inside `futex`; the longest was **102.894 ms**. Overall it made **5,221 futex calls**, whose measured duration includes time blocked inside them. A futex wait represents waiting for a shared synchronization condition [1].
+
+For the longest wait, beginning at **165.578 ms**, the dependency chain was:
+
+**worker-2 (TID 159975) waited on batch_server (TID 159971), which was itself held up by a 100.006 ms timer sleep.**
+
+After the timer expired, the main thread was briefly preempted and ran for **0.058 ms** before directly waking worker-2.
+
+### Secondary cause: CPU contention
+
+Worker-2 was also ready but unable to run for **15,030.859 ms (12.5%)**, always queued on **CPU 3**. The CPU was occupied during that waiting time by:
+
+- **worker-0 (TID 159973): 36.7%**
+- **worker-3 (TID 159976): 33.0%**
+- **worker-1 (TID 159974): 30.2%**
+
+This evidence has medium confidence but indicates contention from several sibling workers rather than one sole CPU holder. Worker-2 ran exclusively on CPU 3 for **6,541.380 ms**; however, its affinity mask was not recorded, so the trace cannot say whether it was restricted to that CPU.
+
+## Conclusion
+
+The dominant slowdown was **synchronization blocking in futex**, with **CPU queueing on CPU 3** as a significant secondary delay. For its longest observed wait, progress specifically depended on the main `batch_server` thread finishing a timer sleep.
+
+## All sources used:
+
+1) Blocking in futex - https://man7.org/linux/man-pages/man2/futex.2.html","ok","","159975","true","resp_0534a4792f65ae29006acfa4520d1c87d29735a40024529bd2","gpt-5.6-sol","resp_0534a4792f65ae29006acfa46020ac87d2b65b972dfa488a04","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | CPU migration and task placement | CPU Usage analysis","139851","134219","794","290","trace_overview=0.308s; unified_explainer=2.754s; tmll_analysis=0.006s; rag_retrieval=0.466s; llm_call=12.377s","15.912","2026-10-14T11-49-04-00_c6a7016b.json"
+"2026-10-14T11:49:16-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Is worker-2 (tid 159975) slow because it uses more CPU than the other workers?","## Short answer
+
+**No—the trace does not support CPU use as the reason worker-2 is slow.** It also found **0 abnormally late cycles out of 2,611** across **0–120,295.295 ms**.
+
+Worker-2 used only **6,541.380 ms of CPU**, about **5.4%** of the trace. Most of its time went elsewhere:
+
+- **Blocked:** **98,528.511 ms (81.9%)**
+- **Runnable, waiting for CPU:** **15,030.859 ms (12.5%)**
+- **Running in user mode:** **6,522.293 ms (5.4%)**
+
+## Dominant delay
+
+The largest delay was blocking in `futex`. All five longest blocked intervals were inside `futex`, including a **102.894 ms** wait beginning at **165.578 ms**.
+
+For that longest wait, worker-2 waited on **batch_server (TID 159971)**, which was itself held up by a **100.006 ms timer sleep** before waking worker-2.
+
+## CPU contention
+
+CPU contention was secondary: worker-2 queued exclusively on CPU 3 for **15,030.859 ms**. During those waits, CPU 3 was mainly occupied by:
+
+- **worker-0 (TID 159973): 36.7%**
+- **worker-3 (TID 159976): 33.0%**
+- **worker-1 (TID 159974): 30.2%**
+
+This occupancy attribution has medium confidence. The trace does not provide a direct total-CPU comparison against every other worker in these findings, so it cannot establish that worker-2 uses more CPU than they do. What it does show clearly is that **blocking, not worker-2’s own CPU consumption, dominates its time**. Its affinity mask was not recorded.","ok","","159975","true","resp_0534a4792f65ae29006acfa46020ac87d2b65b972dfa488a04","gpt-5.6-sol","resp_0534a4792f65ae29006acfa4703f0887d29fbd46639d5149da","window.late_cycle_scan decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | CPU Usage analysis | CPU migration and task placement","145771","139848","571","171","trace_overview=0.291s; window_finder=0.007s; unified_explainer=2.722s; tmll_analysis=0.004s; rag_retrieval=0.626s; llm_call=12.081s","15.732","2026-10-14T11-49-16-04-00_38c2b232.json"
+"2026-10-14T11:49:28-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What is worker-2 (tid 159975) waiting on, and which thread wakes it up?","## Wait and waker
+
+Across the whole trace (**0–120,295.295 ms**), worker-2 was blocked for **98,528.511 ms (82.0% of its alive time)**. Its five longest waits were all inside `futex`, indicating waits on a synchronization condition [1].
+
+For its longest analyzed wait—**102.894 ms**, beginning at **165.578 ms**—the chain was:
+
+**worker-2 (TID 159975) waited on batch_server (TID 159971), which was itself held up in a 100.006 ms timer sleep.**
+
+After that timer expired, **batch_server (TID 159971)** ran briefly and directly woke worker-2. This specific chain has high confidence.
+
+The findings identify the waker for this longest interval, but do not provide an aggregate breakdown of which thread woke worker-2 across all of its futex waits.
+
+## All sources used:
+
+1) Blocking in futex - https://man7.org/linux/man-pages/man2/futex.2.html","ok","","159975","true","resp_0534a4792f65ae29006acfa4703f0887d29fbd46639d5149da","gpt-5.6-sol","resp_0534a4792f65ae29006acfa47fcba087d29675f41cdddb0ff7","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | sched_wakeup and blocked thread wakeups | Linux thread scheduling states","151343","145768","486","261","trace_overview=0.298s; unified_explainer=2.737s; tmll_analysis=0.006s; rag_retrieval=0.576s; llm_call=8.602s","12.220","2026-10-14T11-49-28-04-00_40330555.json"
+"2026-10-14T11:49:40-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Why does flusher (tid 159977) hold the lock for so long?","## The trace does not prove that flusher holds the lock
+
+The available kernel evidence cannot establish that **flusher (TID 159977)** owns a lock for a long time. It shows that flusher itself is mostly waiting:
+
+- **Blocked:** **117,850.752 ms (98.0%)**
+- **Runnable but waiting for CPU:** **2,238.550 ms (1.9%)**
+- **On CPU:** only **29.897 ms**
+
+Its five longest blocked intervals were all inside `futex`, including a **100.042 ms** wait beginning at **165.594 ms**. A futex wait identifies synchronization waiting, but does not by itself identify application-level lock ownership [1].
+
+For that longest interval, the observed chain was:
+
+**flusher waited on batch_server (TID 159971), which was itself held up by a 99.991 ms timer sleep; batch_server then directly woke flusher.**
+
+Flusher also made **1,305 `clock_nanosleep` calls**, totaling **52,349.721 ms**, but these findings do not show that it owned a lock during those sleeps. Determining why it allegedly holds a lock would require evidence correlating lock acquisition/release or ownership with those sleep intervals; that evidence is missing here.
+
+## All sources used:
+
+1) Blocking in futex - https://man7.org/linux/man-pages/man2/futex.2.html","ok","","159977","true","resp_0534a4792f65ae29006acfa47fcba087d29675f41cdddb0ff7","gpt-5.6-sol","resp_0534a4792f65ae29006acfa48a1b0c87d2932bb9ab3c06efa2","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Blocking in poll | Blocking in epoll_wait | System Call Latency Analysis","156261","151340","558","258","trace_overview=0.309s; unified_explainer=0.943s; tmll_analysis=0.007s; rag_retrieval=0.485s; llm_call=10.053s","11.797","2026-10-14T11-49-40-04-00_3414b371.json"
+"2026-10-14T11:49:53-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","Break down how worker-2 (tid 159975) spends its time in a typical round (running, waiting for CPU, blocked).","## Available breakdown
+
+The findings do not segment an individual or median “round,” so an exact per-round duration cannot be reported without guessing. Over the whole trace (**0–120,295.295 ms**), the best available representative breakdown for **worker-2 (TID 159975)** is:
+
+| State | Time | Share |
+|---|---:|---:|
+| **Blocked** | **98,528.511 ms** | **81.9%** |
+| **Runnable, waiting for CPU** | **15,030.859 ms** | **12.5%** |
+| **Running** | **6,541.380 ms** | **5.4%** |
+
+### Blocked
+
+- This is the dominant state.
+- Its five longest blocked intervals were all inside `futex`.
+- The longest was **102.894 ms**, beginning at **165.578 ms**.
+- During that example, worker-2 waited on **batch_server (TID 159971)**, which spent **100.006 ms** in a timer sleep before waking worker-2.
+
+### Waiting for CPU
+
+Worker-2 queued only on **CPU 3**. During its **15,030.859 ms** of runnable waiting, that CPU was occupied mainly by:
+
+- **worker-0 (TID 159973): 36.7%**
+- **worker-3 (TID 159976): 33.0%**
+- **worker-1 (TID 159974): 30.2%**
+
+This occupancy attribution has medium confidence.
+
+### Running
+
+Worker-2 ran for **6,541.380 ms**, entirely on CPU 3, with no recorded migrations. This is actual CPU placement; its affinity mask was not recorded.
+
+In proportional terms, a representative round is therefore approximately **82% blocked, 12.5% waiting for CPU, and 5.4% running**, but exact milliseconds for a typical round require round-level boundaries that are absent from these findings.","ok","","159975","true","resp_0534a4792f65ae29006acfa48a1b0c87d2932bb9ab3c06efa2","gpt-5.6-sol","resp_0534a4792f65ae29006acfa497d54887d28e778edad64d2d79","decomposition running.cpu_placement blocked.syscalls blocked.wake_chain waiting.cpu_occupancy syscalls.frequency","Blocking in futex | Blocking in recvfrom | Critical Path (Process Wait Analysis) | Runnable time and CPU contention | CPU Usage analysis | Linux thread scheduling states","161802","156258","688","266","trace_overview=0.290s; unified_explainer=2.750s; tmll_analysis=0.006s; rag_retrieval=0.611s; llm_call=9.857s","13.515","2026-10-14T11-49-53-04-00_c73c4554.json"
+"2026-10-14T11:50:14-04:00","2m","/home/snehpatel/research/TraceCompass AI Agent/CASCON/Experiment/runs/runs_to_use/batch-server-2m-20261013-190630/trace/kernel","What change would fix the slowdown, and how much faster would rounds be?","## Estimated fix and speedup
+
+The likely fix is to ensure **flusher (TID 159977) does not sleep or perform slow work while holding the synchronization condition needed by worker-2 (TID 159975)**. Release the lock before `clock_nanosleep`, then reacquire it afterward if necessary.
+
+Based on the whole trace (**0–120,295.295 ms**), the estimate is:
+
+- Current average main-thread wait per round: **40.141 ms**
+- Estimated wait after removing worker-2’s futex dependency on flusher: **18.442 ms**
+- Estimated improvement: **about 2.2× faster**
+
+This is a **medium-confidence estimate**, assuming everything else in each round remains as recorded. It must be verified by making the change and retracing.
+
+## Why this change targets the bottleneck
+
+The observed wait chain was:
+
+**batch_server (TID 159971) ← worker-2 (TID 159975) ← flusher (TID 159977) ← timer**
+
+Across 1,305 waits:
+
+- Worker-2 averaged **24.628 ms blocked in `futex`**, awaiting flusher.
+- Flusher averaged **24.609 ms in `clock_nanosleep`** before its timer expired.
+- Worker-2 ended effectively **100% of the main thread’s waits on other threads**, making it the process bottleneck.
+
+The trace therefore suggests—rather than proves—that flusher likely retains the needed lock while sleeping.
+
+## Remaining limit
+
+Removing that wait cannot make a round finish before the other workers. They finished after an average **17.969 ms**, and this bound applied in **1,017 of 1,305 waits**.
+
+The behavior was mostly consistent: median wait **40.049 ms**, with only one outlier, a **45.770 ms** wait at **13,951.032 ms**. Thus, the estimated gain applies to the recurring pattern rather than only a rare spike.","ok","","","true","resp_0534a4792f65ae29006acfa497d54887d28e778edad64d2d79","gpt-5.6-sol","resp_0534a4792f65ae29006acfa4aa4e8087d2b318ed71add0368b","process.threads process.wait_graph process.bottleneck process.what_if process.example_chain process.bottleneck_syscalls process.round_consistency","Critical Path (Process Wait Analysis) | Blocking in futex | Database access optimization | File I/O waits | Latency views | Blocking in accept","173994","161799","654","238","target_resolver=0.076s; trace_overview=0.294s; process_explainer=7.774s; tmll_analysis=0.007s; tmll_series=0.005s; rag_retrieval=0.467s; llm_call=12.126s","20.750","2026-10-14T11-50-14-04-00_c5396759.json"

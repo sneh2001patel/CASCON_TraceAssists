@@ -1,0 +1,42 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{textcomp}
+\usepackage{xspace}
+\usepackage{url}
+
+% Framework name.
+\newcommand{\sysname}{TraceAssist\xspace}
+
+\begin{document}
+
+\title{TITLE}
+
+\author{\IEEEauthorblockN{Sneh Patel}
+\IEEEauthorblockA{AFFILIATION\\
+sneh.2001patel@gmail.com}}
+
+\maketitle
+
+\input{sections/abstract}
+
+% Page budget (4 pages including references):
+%   Abstract, Introduction, Related Work  1 page
+%   Methodology                           1 page
+%   Results                               1.5 pages
+%   Conclusion and References             0.5 page
+
+\input{sections/introduction}
+% \input{sections/related_work}
+\input{sections/methodology}
+\input{sections/results}
+\input{sections/conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

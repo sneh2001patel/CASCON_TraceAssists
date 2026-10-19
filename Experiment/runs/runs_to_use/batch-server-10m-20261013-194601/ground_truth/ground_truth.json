@@ -1,0 +1,25 @@
+{
+  "program": "batch_server",
+  "config": {"duration_s": 600.0, "workers": 4, "slow_worker": 2, "cause": "lock", "work_ms": 5, "slow_ms": 40, "gap_ms": 50, "slow_every": 1, "pinned_cpu": 3},
+  "pid": 200393,
+  "threads": [
+    {"name": "batch_server", "tid": 200393, "role": "coordinator"},
+    {"name": "worker-0", "tid": 200410, "role": "worker"},
+    {"name": "worker-1", "tid": 200411, "role": "worker"},
+    {"name": "worker-2", "tid": 200412, "role": "worker (SLOW)"},
+    {"name": "worker-3", "tid": 200413, "role": "worker"},
+    {"name": "flusher", "tid": 200414, "role": "holds cache_lock during write-back (ROOT CAUSE)"}
+  ],
+  "slow_thread": {"name": "worker-2", "tid": 200412},
+  "expected_answer": "worker-2 is the slow thread. It is not CPU-bound: after its CPU work it blocks on a mutex (futex) held by the flusher thread, which holds it across a ~40 ms timer sleep (simulated disk write-back). Coordinator critical path: batch_server <- worker-2 (futex) <- flusher (futex) <- timer.",
+  "run_window": {"start_mono_ns": 8416606105543, "end_mono_ns": 9016686447509, "realtime_minus_mono_ns": 1791926746011973477},
+  "cache_commits": 6528,
+  "stats": {
+    "round_latency_all": {"rounds": 6528, "mean_ms": 41.810, "p50_ms": 42.862, "p99_ms": 43.318, "max_ms": 45.102},
+    "round_latency_slow_rounds": {"rounds": 6528, "mean_ms": 41.810, "p50_ms": 42.862, "p99_ms": 43.318, "max_ms": 45.102},
+    "round_latency_normal_rounds": {"rounds": 0, "mean_ms": 0.000, "p50_ms": 0.000, "p99_ms": 0.000, "max_ms": 0.000},
+    "slow_worker_finish_slow_rounds": {"rounds": 6528, "mean_ms": 41.804, "p50_ms": 42.858, "p99_ms": 43.312, "max_ms": 45.095},
+    "other_workers_max_finish_slow_rounds": {"rounds": 6528, "mean_ms": 19.676, "p50_ms": 20.065, "p99_ms": 20.363, "max_ms": 20.729},
+    "slow_worker_lock_wait_slow_rounds": {"rounds": 6528, "mean_ms": 24.712, "p50_ms": 24.880, "p99_ms": 29.593, "max_ms": 30.032}
+  }
+}

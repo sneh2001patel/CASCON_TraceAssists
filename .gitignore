@@ -1,0 +1,41 @@
+# Credentials and local environment configuration
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Generated experiment artifacts (retain ground-truth JSON/CSV and results)
+/Experiment/batch_server
+/Experiment/runs/**/trace/
+/Experiment/runs/**/program.log
+rag_storage/
+slices/
+
+# LaTeX auxiliary files; keep paper and figure PDFs
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+
+# Editor and operating-system files
+.DS_Store
+*~
+*.swp

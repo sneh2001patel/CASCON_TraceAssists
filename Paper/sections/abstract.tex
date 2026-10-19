@@ -1,0 +1,31 @@
+\begin{abstract}
+Large language models (LLMs) are now built into everyday tools, yet they
+remain unreliable when an answer depends on information that is very large
+or rarely seen in their training data, such as an organization's own
+systems and the execution traces those systems produce.
+Retrieval-augmented generation (RAG) helps by supplying relevant documents,
+but documents alone cannot tell the model what actually happened in a
+specific run.
+We present \sysname, a framework that answers plain-language questions
+about Linux kernel traces. Java analyzers built on Trace Compass process
+the whole trace and compute measured findings, such as how each thread's
+time divides between running, waiting for CPU and being blocked, and which
+thread wakes which; RAG adds domain and program documentation; and an LLM
+explains the findings.
+We evaluate it on LTTng traces of a multithreaded program with one slow
+thread, recorded at 2, 10 and 30 minutes, using 13 questions covering
+comprehension, root cause, dependencies, quantitative analysis and
+remediation.
+With the same model (GPT-5.6), an LLM given raw trace excerpts scores 35\%
+and an LLM with RAG scores 68\%. \sysname answers all 13 questions
+correctly on every trace, with timings that match the measured ground
+truth.
+The results suggest that grounding an LLM in computed evidence, not only
+retrieved text, lets developers without tracing expertise diagnose
+performance problems by asking questions.
+\end{abstract}
+
+\begin{IEEEkeywords}
+large language models, retrieval-augmented generation, execution traces,
+LTTng, Trace Compass, performance analysis
+\end{IEEEkeywords}

@@ -1,0 +1,43 @@
+\section{Introduction}
+
+Large language models (LLMs) now sit inside search engines, editors and
+developer tools. They are reliable for knowledge that is common on the web,
+but two kinds of information defeat them: information too large to read,
+where accuracy drops even before the context limit is
+reached~\cite{liu2024lost}, and information that is rare or private, such
+as a company's internal systems, which the model saw seldom or never in
+training~\cite{kandpal2023longtail}. In both cases models tend to fill the
+gaps with plausible but unsupported claims~\cite{ji2023hallucination}.
+
+Execution traces combine both problems. A kernel tracer such as
+LTTng~\cite{desnoyers2006lttng} records every system call, scheduling
+decision and interrupt; a 30-minute trace of the program we study holds
+87 million events, far beyond any context window. And a developer's
+question, such as why one thread is slow, concerns one specific program
+that appears in no training corpus. Tools such as Trace
+Compass~\cite{tracecompass} can answer it, but only for users who know
+which analysis to open and how to read it.
+
+Retrieval-augmented generation (RAG)~\cite{lewis2020rag} retrieves
+relevant documents and adds them to the prompt. But documents explain what
+a concept means or how a program was designed, not what happened in a
+particular run: RAG can explain what a futex wait is, but not how long a
+thread waited in one, or which thread woke it.
+
+We present \sysname, a framework that answers plain-language questions
+about kernel traces by grounding the LLM in computed evidence. Java
+analyzers built on Trace Compass read the whole trace and produce measured
+findings, such as how each thread's time divides between running, waiting
+for CPU and being blocked, which thread woke which, and which thread
+finishes each round last. RAG adds documentation, and the LLM explains the
+findings rather than discovering them. Our contributions are:
+\begin{itemize}
+  \item \sysname, which grounds an LLM's answers in analyzer measurements
+        of the whole trace, with RAG for documentation.
+  \item A benchmark: LTTng traces of a multithreaded program with one slow
+        thread at three lengths, and 13 questions with measured ground
+        truth across five categories.
+  \item A comparison using the same model: an LLM given raw trace excerpts
+        answers 35\% correctly and an LLM with RAG 68\%, while \sysname
+        answers 13 of 13 on every trace.
+\end{itemize}

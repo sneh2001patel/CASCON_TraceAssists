@@ -1,0 +1,125 @@
+\section{Methodology}
+
+We wrote a C program, \texttt{batch\_server}, with a known performance
+bug. It runs in rounds, about 11 per second: a coordinator thread hands
+work to four worker threads, each computing for about 5\,ms, waits until
+all of them finish, then idles for 50\,ms. One worker, \texttt{worker-2},
+also commits its results to a shared cache guarded by a mutex,
+\texttt{cache\_lock}, and a \texttt{flusher} thread writes the cache back
+while holding that lock, simulated by a 40\,ms sleep. All six threads
+share one CPU. Holding a lock across slow I/O is a common concurrency
+mistake: \texttt{worker-2} waits 24.7\,ms per round for the lock, so a
+round takes 41.8\,ms instead of the roughly 20\,ms that four 5\,ms
+computations on one CPU need. The program logs each round's timings,
+which provide the ground truth.
+
+We traced the program system-wide with LTTng kernel tracing (system calls,
+scheduling, timers and interrupts) for 2, 10 and 30 minutes, giving traces
+of 5.9, 29.3 and 86.9 million events (1{,}305, 6{,}528 and 19{,}580
+rounds). Activity from the rest of the machine stays in the traces, as it
+would in practice. Three systems, all using GPT-5.6 through the OpenAI
+API, answer the same questions about each trace.
+
+\subsection{Baseline 1: LLM Only}
+
+The first baseline tests whether a capable LLM can answer from the trace
+itself, with no tools. Each trace is printed as text with
+\texttt{babeltrace2}, one line per event. Even the 2-minute trace has
+5.9 million events, about 380 million tokens, so the model receives a
+\emph{slice} of at most 200{,}000 tokens, cut in one of three ways.
+\textbf{(A)~Head:} the first 200k tokens, which is what a user gets by
+pasting the trace into a chat; it covers only the first 4.7--5.7\,ms
+(about 2{,}800 events) and ends before the program starts.
+\textbf{(B)~Middle:} 200k tokens of consecutive events from the trace's
+midpoint, about 3{,}200 events spanning 96--125\,ms, roughly one round.
+\textbf{(C)~Sampled:} 20 windows of 10k tokens spaced evenly across the
+trace, each labelled with its time range, trading depth for coverage.
+
+A header gives the full trace's length and says most events are omitted.
+The system prompt asks the model to act as a Linux tracing expert, answer
+only from the trace text, name threads, thread IDs, CPUs and durations,
+and say when the text is not enough. Each question is a separate API call,
+so no answer can draw on another, and questions name threads by name only.
+The model never sees the ground-truth files. With 13 questions, 3 slices
+and 3 traces, the baseline gives 117 answers, each graded once.
+
+\subsection{Baseline 2: LLM with RAG}
+
+The second baseline adds retrieval to the first and changes nothing else.
+Its knowledge base holds 38 documents: 15 on Linux kernel tracing concepts,
+such as futex waits, thread states and wake-ups; 12 on Trace Compass
+analyses; 10 on Django web applications from an unrelated workload, which
+act as distractors; and a description of \texttt{batch\_server}, standing
+in for the internal documentation an organization keeps for its own
+software. It names the threads and \texttt{cache\_lock} and states the
+design, including that the flusher sleeps for 40\,ms while holding the
+lock, so it points to the likely root cause, as such documentation would in
+practice. It contains no measurements of any run, so it cannot supply the
+measured answers, such as how long \texttt{worker-2} waits per round or how
+much faster rounds would be after a fix; those must come from the trace.
+\sysname uses the same 38 documents, so the documentation is not what
+separates the two systems.
+
+Documents are embedded with \texttt{bge-small-en-v1.5} and stored in
+ChromaDB. The question is the search query: the six nearest documents are
+kept, and the top three are expanded to their full text. This is
+\sysname's retrieval layer, except that \sysname's query also draws on its
+trace findings. The retrieved documents are fixed per question; the program
+description was retrieved for 10 of the 13 questions, ranked first for 6.
+The system prompt adds one instruction: take facts about the system from
+the trace text, and use the documents only to interpret it. An answer that
+is correct only by repeating the program description, with no support in
+the trace slice, scores half.
+
+\subsection{\sysname}
+
+\sysname is a Trace Compass plug-in. A deterministic planner maps each
+question to a target (a thread, a process or the whole trace) and an
+intent, such as explaining where a thread's time went or how a process's
+threads hold each other up. Java analyzers then compute findings from the
+whole trace; RAG adds documentation as further context, such as what a
+futex wait is or what the program was designed to do; and an LLM, the same
+GPT-5.6 model as in both baselines, combines the findings and documents
+into the answer.
+
+\textbf{Java analyzers.} Three analyzers, built on Trace Compass's kernel
+state system and execution graph, cover the three targets:
+\begin{itemize}
+  \item The \emph{trace explainer} summarizes the trace: which events were
+        recorded, which processes ran and used the CPU, and which are the
+        workload rather than background activity or the tracer.
+  \item The \emph{process explainer} splits each thread's time into
+        running, waiting for CPU and blocked, follows the execution graph's
+        wake-up edges to find which thread ended each wait, and names the
+        bottleneck: the thread the main thread waits on, with its wait
+        chain to the root (here main thread $\leftarrow$
+        \texttt{worker-2} $\leftarrow$ \texttt{flusher} $\leftarrow$
+        timer). Over every round it measures when each thread finishes, how
+        long the lock holder holds the lock, inferred from the waits and
+        wake-ups around it, and how long rounds would take without the
+        bottleneck's wait.
+  \item The \emph{thread explainer} splits one thread's time by state and
+        explains each large share: for blocked time, the system call and
+        the critical path to the thread that ended the wait; for CPU waits,
+        which threads held the CPU; for running time, user and system time.
+        It also adds the thread's part in its process's recurring wait
+        chain, so that a one-off wait, such as the startup pause, is not
+        mistaken for the recurring cause.
+\end{itemize}
+Each result is a \emph{finding}: a JSON object with a one-sentence claim
+and its numbers, the time window, the evidence, a confidence level and
+caveats. Inferences a kernel trace cannot observe directly, such as lock
+ownership, are marked medium confidence. The LLM's rules require every
+statement about the trace to come from a finding, with its numbers, and a
+missing finding to be stated rather than guessed. An auxiliary statistical
+module, TMLL, adds system-call summaries; we leave its evaluation to
+future work.
+
+\textbf{Protocol and limitation.} \sysname currently identifies the thread
+a question asks about by its ID, as in ``Why is worker-2 (tid 164857)
+slow?''. A name resolver handles process names and uniquely named threads,
+but threads that share a name, as in a thread pool, still need the ID, so
+our thread questions carried it; the baselines' questions did not.
+Removing this dependence is future work. For each trace, the questions
+were asked in two batches (Q1--Q10 and Q11--Q13), each one conversation in
+which later answers can see earlier ones, giving 39 answers.

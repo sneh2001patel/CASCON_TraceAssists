@@ -1,0 +1,15 @@
+[
+  {"id": "Q1", "type": "Comprehension", "hub": "Multi-hub", "question": "What does this trace record?"},
+  {"id": "Q2", "type": "Comprehension", "hub": "Multi-hub", "question": "What does each thread of batch_server do?"},
+  {"id": "Q3", "type": "Comprehension", "hub": "Single-hub", "question": "Which CPU(s) does batch_server run on?"},
+  {"id": "Q4", "type": "Root cause", "hub": "Multi-hub", "question": "Which thread is the bottleneck of batch_server?"},
+  {"id": "Q5", "type": "Dependency", "hub": "Multi-hub", "question": "Why is worker-2 slow?"},
+  {"id": "Q6", "type": "Dependency", "hub": "Multi-hub", "question": "Is worker-2 slow because it uses more CPU than the other workers?"},
+  {"id": "Q7", "type": "Dependency", "hub": "Single-hub", "question": "What is worker-2 waiting on, and which thread wakes it up?"},
+  {"id": "Q8", "type": "Dependency", "hub": "Single-hub", "question": "Why does flusher hold the lock for so long?"},
+  {"id": "Q9", "type": "Quantitative", "hub": "Single-hub", "question": "Break down how worker-2 spends its time in a typical round (running, waiting for CPU, blocked)."},
+  {"id": "Q10", "type": "Remediation", "hub": "Multi-hub", "question": "What change would fix the slowdown, and how much faster would rounds be?"},
+  {"id": "Q11", "type": "Quantitative", "hub": "Multi-hub", "question": "In a typical round, how much later does worker-2 finish than the other three workers?"},
+  {"id": "Q12", "type": "Remediation", "hub": "Single-hub", "question": "How could flusher be changed to hold cache_lock for less time, and how long would it hold the lock afterwards?"},
+  {"id": "Q13", "type": "Root cause", "hub": "Single-hub", "question": "What is the root cause of flusher's long blocked time: does another thread hold it up, or does it delay itself?"}
+]
